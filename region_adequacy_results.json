@@ -1,0 +1,81 @@
+{
+  "dataset": {
+    "name": "NOAA Global Drifter Program hourly dataset v2.01.1",
+    "access": "https://noaa-oar-hourly-gdp-pds.s3.amazonaws.com/latest/gdp-v2.01.1.zarr via clouddrift gdp1h()",
+    "citation": "Elipot et al. (2022), doi:10.25921/x46c-3620 (with Elipot et al. 2016 for the velocity product)",
+    "accessed": "2026-09-22",
+    "total_hourly_records": 197214787,
+    "total_deployments": 19396,
+    "lon_convention": "-180..180 degrees East"
+  },
+  "pipeline_validation": {
+    "description": "Count of distinct drifters in the lecturer's worked-example box reproduces the published figure of 452",
+    "EAC_box_145_165E_15_45S": {
+      "lon_min": 145,
+      "lon_max": 165,
+      "lat_min": -45,
+      "lat_max": -15,
+      "hourly_records": 2078547,
+      "distinct_drifters": 452,
+      "cells_1deg_occupied": 486,
+      "cells_1deg_ge20": 484,
+      "median_records_per_cell": 3986,
+      "median_drifters_per_cell": 33,
+      "cells_with_ge10_drifters": 455
+    }
+  },
+  "chosen_region_B": {
+    "lon_min": 10,
+    "lon_max": 40,
+    "lat_min": -45,
+    "lat_max": -25,
+    "hourly_records": 3020670,
+    "distinct_drifters": 1051,
+    "cells_1deg_occupied": 483,
+    "cells_1deg_ge20": 482,
+    "median_records_per_cell": 6364,
+    "median_drifters_per_cell": 77,
+    "cells_with_ge10_drifters": 470
+  },
+  "alternates_rejected": {
+    "A_tighter_15_40E_25_42S": {
+      "lon_min": 15,
+      "lon_max": 40,
+      "lat_min": -42,
+      "lat_max": -25,
+      "hourly_records": 1817843,
+      "distinct_drifters": 752,
+      "cells_1deg_occupied": 308,
+      "cells_1deg_ge20": 307,
+      "median_records_per_cell": 6024,
+      "median_drifters_per_cell": 80,
+      "cells_with_ge10_drifters": 296
+    },
+    "C_source_20_45E_20_40S": {
+      "lon_min": 20,
+      "lon_max": 45,
+      "lat_min": -40,
+      "lat_max": -20,
+      "hourly_records": 1827494,
+      "distinct_drifters": 628,
+      "cells_1deg_occupied": 333,
+      "cells_1deg_ge20": 332,
+      "median_records_per_cell": 5906,
+      "median_drifters_per_cell": 59,
+      "cells_with_ge10_drifters": 318
+    },
+    "D_trim_12_40E_24_44S": {
+      "lon_min": 12,
+      "lon_max": 40,
+      "lat_min": -44,
+      "lat_max": -24,
+      "hourly_records": 2545338,
+      "distinct_drifters": 965,
+      "cells_1deg_occupied": 424,
+      "cells_1deg_ge20": 423,
+      "median_records_per_cell": 6206,
+      "median_drifters_per_cell": 77,
+      "cells_with_ge10_drifters": 408
+    }
+  }
+}
