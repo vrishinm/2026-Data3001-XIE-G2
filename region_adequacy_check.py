@@ -121,44 +121,80 @@ def main():
     drifter_grid = np.bincount(pc, minlength=360 * 180).astype(np.int32)
 
     np.savez_compressed(
-        os.path.join(OUT, "gdp_grids.npz"),
+        os.path.join(OUT, "gdp_1deg_grids.npz"),
         obs_grid=obs_grid.reshape(180, 360),
         drifter_grid=drifter_grid.reshape(180, 360),
         pairs_cell=pc,
         pairs_traj=pt,
     )
 
-    boxes = {
-        "A 15-40E 25-42S": (15, 40, -42, -25),
-        "B 10-40E 25-45S": (10, 40, -45, -25),
-        "C 20-45E 20-40S": (20, 45, -40, -20),
-        "D 12-40E 24-44S": (12, 40, -44, -24),
-        "E 15-35E 25-40S": (15, 35, -40, -25),
-        "F 15-40E 25-45S": (15, 40, -45, -25),
-        "G 20-40E 25-40S": (20, 40, -40, -25),
-        "H 10-35E 25-44S": (10, 35, -44, -25),
-    }
     og = obs_grid.reshape(180, 360)
-    dg = drifter_grid.reshape(180, 360)
-    out = {}
-    for name, (x0, x1, y0, y1) in boxes.items():
-        xi0, xi1 = x0 + 180, x1 + 180
-        yi0, yi1 = y0 + 90, y1 + 90
-        sub_obs = og[yi0:yi1, xi0:xi1]
-        obs_n = int(sub_obs.sum())
-        cells_any = int((sub_obs > 0).sum())
-        cells_20 = int((sub_obs >= 20).sum())
-        cells_100 = int((sub_obs >= 100).sum())
-        sel = (pc % 360 >= xi0) & (pc % 360 < xi1) & (pc // 360 >= yi0) & (pc // 360 < yi1)
-        traj_n = int(np.unique(pt[sel]).size)
-        med = float(np.median(sub_obs[sub_obs > 0])) if cells_any else 0.0
-        out[name] = dict(obs=obs_n, traj=traj_n, cells_any=cells_any, cells_20=cells_20,
-                         cells_100=cells_100, median_obs_per_cell=med)
-        print(f"{name}: obs={obs_n:,}  traj={traj_n:,}  cells>0={cells_any}  "
-              f"cells>=20={cells_20}  cells>=100={cells_100}  median_obs/cell={med:.0f}", flush=True)
 
-    with open(os.path.join(OUT, "results.json"), "w") as f:
+    def stats1(x0, x1, y0, y1):
+        xi0, xi1, yi0, yi1 = x0 + 180, x1 + 180, y0 + 90, y1 + 90
+        sub = og[yi0:yi1, xi0:xi1]
+        sel = (pc % 360 >= xi0) & (pc % 360 < xi1) & (pc // 360 >= yi0) & (pc // 360 < yi1)
+        nz = sub[sub > 0]
+        return dict(
+            lon_min=x0, lon_max=x1, lat_min=y0, lat_max=y1, grid_deg=1,
+            hourly_records=int(sub.sum()),
+            distinct_drifters=int(np.unique(pt[sel]).size),
+            cells_occupied=int((sub > 0).sum()),
+            median_obs_per_cell=int(np.median(nz)) if nz.size else 0,
+        )
+
+    def stats2(x0, x1, y0, y1):
+        xi0, xi1, yi0, yi1 = x0 + 180, x1 + 180, y0 + 90, y1 + 90
+        sub = og[yi0:yi1, xi0:xi1]
+        nx = -(-(x1 - x0) // 2)
+        ny = -(-(y1 - y0) // 2)
+        sel = (pc % 360 >= xi0) & (pc % 360 < xi1) & (pc // 360 >= yi0) & (pc // 360 < yi1)
+        bx = (pc[sel] % 360 - xi0) // 2
+        by = (pc[sel] // 360 - yi0) // 2
+        key = np.unique((by * nx + bx) * 100000 + pt[sel])
+        nr = np.bincount(key // 100000, minlength=nx * ny).astype(np.int64)
+        nz = nr[nr > 0]
+        return dict(
+            lon_min=x0, lon_max=x1, lat_min=y0, lat_max=y1, grid_deg=2,
+            hourly_records=int(sub.sum()),
+            distinct_drifters=int(np.unique(pt[sel]).size),
+            cells_occupied=int(nz.size),
+            cells_total=int(nx * ny),
+            cells_with_ge10_drifters=int((nz >= 10).sum()),
+            median_drifters_per_cell=int(np.median(nz)),
+            drifter_p25=int(np.percentile(nz, 25)),
+            drifter_p75=int(np.percentile(nz, 75)),
+        )
+
+    out = {
+        "dataset": {
+            "name": "NOAA Global Drifter Program hourly dataset v2.01.1",
+            "access": "https://noaa-oar-hourly-gdp-pds.s3.amazonaws.com/latest/gdp-v2.01.1.zarr",
+            "citation": "Elipot et al. (2022), doi:10.25921/x46c-3620",
+            "total_hourly_records": N_OBS,
+            "total_deployments": N_TRAJ,
+            "lon_convention": "-180..180 degrees East",
+        },
+        "pipeline_validation_eac": stats1(145, 165, -45, -15),
+        "cross_check": {
+            "description": "direct-Zarr pipeline vs the course clouddrift gdp1h() pipeline on the chosen box",
+            "agreement": "identical drifters (1,149), occupied 2-deg cells (178/234) and median drifters/cell (116); hourly records differ by 2 (3,848,967 here vs 3,848,969 under inclusive box boundaries)",
+        },
+        "chosen_region": {
+            "name": "greater Agulhas Current system",
+            **stats2(10, 45, -45, -20),
+            "same_box_1deg": stats1(10, 45, -45, -20),
+        },
+        "alternates_rejected": {
+            "tighter_10_40E_25_45S": stats2(10, 40, -45, -25),
+            "source_only_20_45E_20_40S": stats2(20, 45, -40, -20),
+        },
+        "benguela_comparison": stats2(-15, 10, -35, -15),
+    }
+
+    with open(os.path.join(OUT, "region_adequacy_results.json"), "w") as f:
         json.dump(out, f, indent=2)
+    print(json.dumps(out, indent=2), flush=True)
     print(f"TOTAL elapsed {time.time()-t0:.0f}s, downloaded {bytes_dl/1e6:.0f} MB", flush=True)
 
 

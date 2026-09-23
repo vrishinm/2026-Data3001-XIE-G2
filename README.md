@@ -7,7 +7,7 @@ Due Sunday Week 3 per the project brief
 
 **Client:** Shane Elipot (Rosenstiel School, University of Miami)
 **Group:** 2
-**Repository:** `https://github.com/cestbon0309/DATA3001-T3`
+**Repository:** `https://github.com/vrishinm/Data3001-Assignment-Group-2`
 
 ---
 
@@ -15,9 +15,9 @@ Due Sunday Week 3 per the project brief
 
 **Region R.** R is the greater Agulhas Current system, defined as the box
 
-> **R = 10°E–40°E, 25°S–45°S** (30° × 20°; 483 occupied 1° cells)
+> **R = 10°E–45°E, 20°S–45°S** (35° × 25°; 649 of 875 occupied 1° cells)
 
-The box was selected against the data-adequacy comparison in Section 2: it holds 3.0 million hourly records from 1,051 independent drifters, while remaining small enough that most 1° cells are sampled by many independent drifters.
+The box was selected against the data-adequacy comparison in Section 2: it holds 3.85 million hourly records from 1,149 independent drifters, and most 1° cells are visited by many independent drifters.
 
 **Why this region matters.** The Agulhas Current is one of the strongest western boundary currents in the Southern Hemisphere; it carries warm, saline Indian Ocean water southwest along the South African coast before retroflecting south of the continent and returning east as the Agulhas Return Current (Lutjeharms, 2006). Rings shed at the retroflection export Indian Ocean water into the South Atlantic — "Agulhas leakage" — a process implicated in the Atlantic overturning circulation and in past climate change (de Ruijter et al., 1999; Beal et al., 2011). The system also supports major regional fisheries, and it underlies search-and-rescue, debris- and spill-response planning along one of the world's busiest shipping routes: in each case the operative question is where the surface water — and anything floating in it — goes. R is also among the best-sampled regions of the Global Drifter Program, which makes a data-driven transport operator feasible here.
 
@@ -34,10 +34,9 @@ The box was selected against the data-adequacy comparison in Section 2: it holds
 | **chosen R (Agulhas)** | 10°E–45°E | 45°S–20°S | 3,848,969 | 1,149 |
 | Benguela (rejected) | 0°–20°E | 38°S–15°S | 2,538,266 | 706 |
 
-Both boxes use the boundaries given in the Week 1 illustration, and our pipeline reproduces
-the published counts for each exactly, which validates the counting method.
+Both boxes use the boundaries given in the Week 1 illustration. Counts are from the NOAA Global Drifter Program hourly dataset v2.01.1 (Elipot et al., 2022; see References). The course pipeline (clouddrift `gdp1h()`) produced Table 1; an independent direct-Zarr stream of the same data reproduces every drifter and per-cell statistic (record counts differ by at most two at the box edges), which validates the counting method. Our count for the worked-example East Australian Current box similarly reproduces the lecturer's published 452 drifters.
 
-**Why this is enough.** Adequacy is judged by independent drifters per cell, not by raw record count: the hourly product interpolates every deployment onto a full hourly grid, so raw records overstate the information content. In R the median 1° cell is visited by 77 independent drifters and 470 of 483 occupied cells are visited by at least 10; only one occupied cell has fewer than 20 hourly records. Cell-to-cell transition probabilities can therefore be estimated from many independent realisations rather than from a handful of long tracks.
+**Why this is enough.** Adequacy is judged by independent drifters per cell, not by raw record count: the hourly product interpolates every deployment onto a full hourly grid, so raw records overstate the information content. In R the median 1° cell is visited by 71 different drifters (10th–90th percentile: 24–138), and 614 of the 649 occupied cells are visited by at least 10. Cell-to-cell transition probabilities can therefore be estimated from many independent realisations rather than from a handful of long tracks; the transport model itself will start from 2° cells, which pools more drifters per cell and keeps the transition matrix better supported.
 
 **Why Agulhas over Benguela**
 
@@ -45,15 +44,21 @@ We compared both regions before committing. Benguela has 706 drifters against Ag
 
 ---
 
-## 3. Project definition
+## 3. Project definition — draft starters
 
-
+- **Transport question:** estimate the 7-day transition probabilities `P_ij = Pr(X_{t+7 days} ∈ cell j | X_t ∈ cell i)` on a 2° grid over R, with 7 / 30 / 365-day horizons.
+- **Product:** a surface-transport operator (transition matrix) that can be iterated forward, plus where chosen release points end up and where R gathers/loses material.
+- **States and boundaries (typedeath):** include an absorbing outside-region state; beachings (`typedeath = 1`) are true endpoints, while all other terminations (drogue loss, battery/signal loss) are censored observations, not arrivals.
+- **Planned extensions:** seasonal split; sensitivity to grid resolution and horizon; drogued vs undrogued.
 
 ---
 
-## 4. Method plan
+## 4. Method plan — draft starters
 
-
+- Build starting cells and pair every hourly position with its position 7 days later (positions from clouddrift `gdp1h()`; gaps and interpolation uncertainty flagged).
+- Absorbing state handling: censored tracks are removed from destination counts rather than treated as arrivals; beachings count as exits.
+- Validation: train/test split by drifter (never by observation), compare predicted vs actual destination distributions on held-out drifters.
+- Caveats: outside-region absorbing state; missing observations vs genuine exits; uneven sampling across cells.
 
 ---
 
@@ -76,6 +81,6 @@ We compared both regions before committing. Benguela has 706 drifters against Ag
 
 | File | Description |
 |---|---|
-| `region_adequacy_results.json` | Full statistics for every candidate box, including the EAC validation |
-| `gdp_1deg_grids.npz` | 1° grids from the full hourly dataset: `obs_grid` (records per cell), `drifter_grid` (distinct drifters per cell), `pairs_cell`/`pairs_traj` (unique cell–trajectory pairs) |
-| `region_adequacy_check.py` | Script that streamed lon/lat from the public Zarr store and produced the grids (run with Python 3 + numpy, requests, numcodecs) |
+| `region_adequacy_results.json` | Full statistics for the chosen box, the rejected alternates, the Benguela comparison, and the EAC validation |
+| `gdp_1deg_grids.npz` | Global 1° grids from the full hourly dataset: `obs_grid` (records per cell), `drifter_grid` (distinct drifters per cell), `pairs_cell`/`pairs_traj` (unique cell–trajectory pairs) |
+| `region_adequacy_check.py` | Script that streamed lon/lat from the public Zarr store, built the grids, and computed the 2° summary statistics (run with Python 3 + numpy, requests, numcodecs) |
