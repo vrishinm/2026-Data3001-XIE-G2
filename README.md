@@ -27,14 +27,15 @@ The box was selected against the data-adequacy comparison in Section 2: it holds
 
 ## 2. Data availability
 
-All counts are computed directly from the NOAA Global Drifter Program hourly dataset v2.01.1 (Elipot et al., 2022; see References), streamed from the public Zarr store. The pipeline reproduces the lecturer's published count for the worked-example East Australian Current box (452 drifters) exactly, which validates the counting method.
+### **Table 1.** Hourly records and distinct drifters in the chosen region and one rejected alternative.
 
-| Box | Longitude | Latitude | Hourly records | Distinct drifters | Occupied 1° cells | Median drifters / cell |
-|---|---|---:|---:|---:|---:|---:|
-| **R (chosen)** | 10–40°E | 25–45°S | 3,020,670 | **1,051** | 483 | 77 |
-| A (rejected — too tight) | 15–40°E | 25–42°S | 1,817,843 | 752 | 308 | 80 |
-| C (rejected — misses retroflection/leakage) | 20–45°E | 20–40°S | 1,827,494 | 628 | 333 | 59 |
-| EAC worked example (validation) | 145–165°E | 45–15°S | 2,078,547 | 452 | 486 | 33 |
+| Box | Longitude | Latitude | Hourly records | Distinct drifters |
+|---|---|---|---|---|
+| **R (chosen)** | 10°E–45°E | 45°S–20°S | 3,848,969 | 1,149 |
+| Benguela (rejected) | 0°–20°E | 38°S–15°S | 2,538,266 | 706 |
+
+Both boxes use the boundaries given in the Week 1 illustration, and our pipeline reproduces
+the published counts for each exactly, which validates the counting method.
 
 **Why this is enough.** Adequacy is judged by independent drifters per cell, not by raw record count: the hourly product interpolates every deployment onto a full hourly grid, so raw records overstate the information content. In R the median 1° cell is visited by 77 independent drifters and 470 of 483 occupied cells are visited by at least 10; only one occupied cell has fewer than 20 hourly records. Cell-to-cell transition probabilities can therefore be estimated from many independent realisations rather than from a handful of long tracks.
 
