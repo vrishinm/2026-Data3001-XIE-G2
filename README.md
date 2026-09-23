@@ -3,7 +3,7 @@
 ## A surface-transport operator for the Agulhas region
 
 Project proposal / repository README (15%, 3 A4 pages + references).
-Due Sunday Week 3 per the project brief (Week-1 slides say Week 4 — **TODO: confirm with lecturer**).
+Due Sunday Week 3 per the project brief
 
 **Client:** Shane Elipot (Rosenstiel School, University of Miami)
 **Group:** 2
