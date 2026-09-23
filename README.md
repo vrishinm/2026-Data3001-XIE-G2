@@ -45,19 +45,19 @@ We compared both regions before committing. Benguela has 706 drifters against Ag
 
 ---
 
-## 3. Project definition — TODO 
+## 3. Project definition
 
 
 
 ---
 
-## 4. Method plan — TODO
+## 4. Method plan
 
 
 
 ---
 
-## 5. Team and timeline — TODO
+## 5. Team and timeline
 
 ---
 
