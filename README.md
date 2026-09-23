@@ -3,7 +3,7 @@
 ## A surface-transport operator for the Agulhas region
 
 Project proposal / repository README (15%, 3 A4 pages + references).
-Due Sunday Week 3 per the project brief
+Due Sunday Week 3 per the project brief (Week-1 slides say Week 4 — **TODO: confirm with lecturer**).
 
 **Client:** Shane Elipot (Rosenstiel School, University of Miami)
 **Group:** 2
@@ -27,23 +27,16 @@ The box was selected against the data-adequacy comparison in Section 2: it holds
 
 ## 2. Data availability
 
-Region R = [10°E, 45°E] × [45°S, 20°S].
+All counts are computed directly from the NOAA Global Drifter Program hourly dataset v2.01.1 (Elipot et al., 2022; see References), streamed from the public Zarr store. The pipeline reproduces the lecturer's published count for the worked-example East Australian Current box (452 drifters) exactly, which validates the counting method.
 
-Data: NOAA Global Drifter Program hourly product, version 2.01.1, accessed via CloudDrift on 23/09/2026. DOI: 10.25921/x46c-3620. Coverage 1987-10-02 to 2022-10-31.
+| Box | Longitude | Latitude | Hourly records | Distinct drifters | Occupied 1° cells | Median drifters / cell |
+|---|---|---:|---:|---:|---:|---:|
+| **R (chosen)** | 10–40°E | 25–45°S | 3,020,670 | **1,051** | 483 | 77 |
+| A (rejected — too tight) | 15–40°E | 25–42°S | 1,817,843 | 752 | 308 | 80 |
+| C (rejected — misses retroflection/leakage) | 20–45°E | 20–40°S | 1,827,494 | 628 | 333 | 59 |
+| EAC worked example (validation) | 145–165°E | 45–15°S | 2,078,547 | 452 | 486 | 33 |
 
-- Hourly records in R: 3,848,969
-- Distinct trajectories in R: 1,149
-
-**Results: 2° grid, Agulhas box (10°E–45°E, 45°S–20°S)**
-
-- Occupied cells: 178 of 234. The box has 18 columns × 13 rows = 234 cells. The 56 empty cells are mostly land (South Africa, Mozambique, the south tip of Madagascar). Drifters cannot go there, so this is normal.
-- Median: 116 different drifters per cell. A typical cell is visited by 116 different drifters.
-- 10th–90th percentile: 28–222. Coverage is uneven, but even the sparse cells have about 28 drifters.
-- 171 cells have 10 or more drifters. Only 7 occupied cells are below this level.
-
-**Why this is "enough"**
-
-Raw record counts overstate how much information the data contain, because one drifter can stay in the same cell for hundreds of hours. We therefore count the number of different drifters that visit each 2° cell. Of the 178 ocean cells that contain data, the median cell is visited by 116 different drifters (10th–90th percentile: 28–222), and 171 cells have at least 10. This suggests that transition probabilities can be estimated reliably for most of the region; the 7 cells below this threshold will be merged with neighbouring cells.
+**Why this is enough.** Adequacy is judged by independent drifters per cell, not by raw record count: the hourly product interpolates every deployment onto a full hourly grid, so raw records overstate the information content. In R the median 1° cell is visited by 77 independent drifters and 470 of 483 occupied cells are visited by at least 10; only one occupied cell has fewer than 20 hourly records. Cell-to-cell transition probabilities can therefore be estimated from many independent realisations rather than from a handful of long tracks.
 
 **Why Agulhas over Benguela**
 
@@ -51,19 +44,19 @@ We compared both regions before committing. Benguela has 706 drifters against Ag
 
 ---
 
-## 3. Project definition
+## 3. Project definition — TODO 
 
 
 
 ---
 
-## 4. Method plan
+## 4. Method plan — TODO
 
 
 
 ---
 
-## 5. Team and timeline
+## 5. Team and timeline — TODO
 
 ---
 
