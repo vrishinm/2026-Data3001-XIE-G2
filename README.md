@@ -15,7 +15,7 @@ Due Sunday Week 3 per the project brief
 
 **Region R.** R is the greater Agulhas Current system, defined as the box
 
-> **R = 10°E–45°E, 20°S–45°S** (35° × 25°; 649 of 875 occupied 1° cells)
+> **R = 10°E–45°E, 20°S–45°S** (35° × 25°; 178 of 234 occupied 2° cells)
 
 The box was selected against the data-adequacy comparison in Section 2: it holds 3.85 million hourly records from 1,149 independent drifters, and most 1° cells are visited by many independent drifters.
 
@@ -36,7 +36,7 @@ The box was selected against the data-adequacy comparison in Section 2: it holds
 
 Both boxes use the boundaries given in the Week 1 illustration. Counts are from the NOAA Global Drifter Program hourly dataset v2.01.1 (Elipot et al., 2022; see References). The course pipeline (clouddrift `gdp1h()`) produced Table 1; an independent direct-Zarr stream of the same data reproduces every drifter and per-cell statistic (record counts differ by at most two at the box edges), which validates the counting method. Our count for the worked-example East Australian Current box similarly reproduces the lecturer's published 452 drifters.
 
-**Why this is enough.** Adequacy is judged by independent drifters per cell, not by raw record count: the hourly product interpolates every deployment onto a full hourly grid, so raw records overstate the information content. In R the median 1° cell is visited by 71 different drifters (10th–90th percentile: 24–138), and 614 of the 649 occupied cells are visited by at least 10. Cell-to-cell transition probabilities can therefore be estimated from many independent realisations rather than from a handful of long tracks; the transport model itself will start from 2° cells, which pools more drifters per cell and keeps the transition matrix better supported.
+**Why this is enough.** Adequacy is judged by independent drifters per cell, not by raw record count: the hourly product interpolates every deployment onto a full hourly grid, so raw records overstate the information content. On the 2° grid used by the transport model, the median cell in R is visited by 116 different drifters (interquartile range 76–168), and 171 of the 178 occupied cells are visited by at least 10. Cell-to-cell transition probabilities can therefore be estimated from many independent realisations rather than from a handful of long tracks.
 
 **Why Agulhas over Benguela**
 
