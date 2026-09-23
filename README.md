@@ -27,21 +27,27 @@ The box was selected against the data-adequacy comparison in Section 2: it holds
 
 ## 2. Data availability
 
-**Source.** NOAA Global Drifter Program hourly dataset, v2.01.1 (NCEI accession 0248584; Elipot et al., 2022), accessed through the CloudDrift `gdp1h()` interface on 23 September 2026. The release covers 2 October 1987 to 31 October 2022: 197,214,787 hourly records from 19,396 drifter trajectories. A record is counted as in R if its position lies inside the box, boundaries included.
+Region R = [10°E, 45°E] × [45°S, 20°S].
 
-**Validation.** Our pipeline reproduces the course's published Week 1 counts exactly for both boxes we examined (Xie, 2026, slide 7), which confirms that the data release and counting method match.
+Data: NOAA Global Drifter Program hourly product, version 2.01.1, accessed via CloudDrift on 23/09/2026. DOI: 10.25921/x46c-3620. Coverage 1987-10-02 to 2022-10-31.
 
-| Box | Longitude | Latitude | Hourly records | Distinct drifters | Course figure |
-|---|---|---|---|---|---|
-| **R — Agulhas (chosen)** | 10–45°E | 45–20°S | 3,848,969 | 1,149 | matches exactly |
-| Benguela (alternative) | 0–20°E | 38–15°S | 2,538,266 | 706 | matches exactly |
-| Tighter Agulhas box (sensitivity) | 10–40°E | 45–25°S | 3,020,670 | 1,051 | — |
+- Hourly records in R: 3,848,969
+- Distinct trajectories in R: 1,149
 
-**Why this is enough.** Raw record counts overstate how much information the data contain, because the hourly product interpolates each deployment onto a full hourly grid and one drifter can stay in the same cell for hundreds of hours. We therefore count the number of *different* drifters that visit each cell, on the 2° grid recommended as a starting resolution for the transport analysis. The box has 18 × 13 = 234 cells; 178 contain data, and the 56 empty cells are almost all land (South Africa, Mozambique, southern Madagascar). The median occupied cell is visited by **116** different drifters (10th–90th percentile: 28–222), and 171 of the 178 cells have at least 10. Transition probabilities can therefore be estimated from many independent realisations across most of R; the 7 cells below this threshold will be merged with neighbouring cells.
+**Results: 2° grid, Agulhas box (10°E–45°E, 45°S–20°S)**
 
-**Why Agulhas rather than Benguela.** Benguela has 706 drifters against Agulhas's 1,149, a gap that matters more once adequacy is measured per cell rather than in total records. More importantly, the Agulhas retroflection splits material between two genuinely different outcomes — back east into the Indian Ocean or west into the Atlantic — so a transition matrix has a substantive question to answer. Benguela's alongshore/offshore contrast offers a narrower transport question. Shrinking the box to 10–40°E, 45–25°S would lose 98 drifters and most of the Mozambique Channel inflow described in Section 1.
+- Occupied cells: 178 of 234. The box has 18 columns × 13 rows = 234 cells. The 56 empty cells are mostly land (South Africa, Mozambique, the south tip of Madagascar). Drifters cannot go there, so this is normal.
+- Median: 116 different drifters per cell. A typical cell is visited by 116 different drifters.
+- 10th–90th percentile: 28–222. Coverage is uneven, but even the sparse cells have about 28 drifters.
+- 171 cells have 10 or more drifters. Only 7 occupied cells are below this level.
 
-**Endpoints versus censoring.** Each trajectory records why it ended (`typedeath`). Only code 1 (ran aground) is a genuine destination produced by the flow; codes 0 and 2–6 (still active at the release cut-off, picked up by a vessel, stopped transmitting, sporadic transmissions, battery failure, inactive) end the record for reasons unrelated to transport and will be treated as censored. Code 3 near the coast may hide an unrecorded grounding and will be checked separately.
+**Why this is "enough"**
+
+Raw record counts overstate how much information the data contain, because one drifter can stay in the same cell for hundreds of hours. We therefore count the number of different drifters that visit each 2° cell. Of the 178 ocean cells that contain data, the median cell is visited by 116 different drifters (10th–90th percentile: 28–222), and 171 cells have at least 10. This suggests that transition probabilities can be estimated reliably for most of the region; the 7 cells below this threshold will be merged with neighbouring cells.
+
+**Why Agulhas over Benguela**
+
+We compared both regions before committing. Benguela has 706 drifters against Agulhas's 1,149, and once we started thinking in terms of independent drifters per cell rather than raw records, that gap mattered more than it first looked. The bigger reason is what each region asks of a transition matrix. In Agulhas the retroflection splits material between two genuinely different outcomes, either back east into the Indian Ocean or west into the Atlantic, so the matrix has something interesting to estimate. Benguela's alongshore/offshore contrast felt like a thinner question to build a whole project around.
 
 ---
 
@@ -67,9 +73,8 @@ The box was selected against the data-adequacy comparison in Section 2: it holds
 - de Ruijter, W. P. M., Biastoch, A., Drijfhout, S. S., Lutjeharms, J. R. E., Matano, R. P., Pichevin, T., van Leeuwen, P. J., & Weijer, W. (1999). Indian–Atlantic interocean exchange: Dynamics, estimation and impact. *Journal of Geophysical Research: Oceans*, 104(C9), 20885–20910.
 - Lutjeharms, J. R. E. (2006). *The Agulhas Current*. Springer, Berlin.
 - Elipot, S., Lumpkin, R., Perez, R. C., Lilly, J. M., Early, J. J., & Sykulski, A. M. (2016). A global surface drifter data set at hourly resolution. *Journal of Geophysical Research: Oceans*, 121, 2937–2966. doi:10.1002/2016JC011716
-- Elipot, S., Sykulski, A., Lumpkin, R., Centurioni, L., & Pazos, M. (2022). Hourly location, current velocity, and temperature collected from Global Drifter Program drifters world-wide [Data set, v2.01.1, NCEI accession 0248584, accessed 2026-09-23]. NOAA National Centers for Environmental Information. doi:10.25921/x46c-3620
+- Elipot, S., Sykulski, A., Lumpkin, R., Centurioni, L., & Pazos, M. (2022). Hourly location, current velocity, and temperature collected from Global Drifter Program drifters world-wide [Data set, v2.01.1, accessed 2026-09-22]. NOAA National Centers for Environmental Information. doi:10.25921/x46c-3620
 - Elipot, S., Sykulski, A., Lumpkin, R., Centurioni, L., & Pazos, M. (2022). A dataset of hourly sea surface temperature from drifting buoys. *Scientific Data*, 9, 567. doi:10.1038/s41597-022-01670-2
-- Xie, Y. (2026). *DATA3001 Week 1: A Worked Example — Preliminary regional results and a California Current illustration*. Course slides, UNSW Sydney.
 
 ---
 
