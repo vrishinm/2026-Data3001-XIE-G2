@@ -31,7 +31,7 @@ The box was selected against the data-adequacy comparison in Section 2: it holds
 
 | Box | Longitude | Latitude | Hourly records | Distinct drifters |
 |---|---|---|---|---|
-| **R (chosen)** | 10°E–45°E | 45°S–20°S | 3,848,969 | 1,149 |
+| **chosen R (Agulhas)** | 10°E–45°E | 45°S–20°S | 3,848,969 | 1,149 |
 | Benguela (rejected) | 0°–20°E | 38°S–15°S | 2,538,266 | 706 |
 
 Both boxes use the boundaries given in the Week 1 illustration, and our pipeline reproduces
