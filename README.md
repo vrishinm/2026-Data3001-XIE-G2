@@ -5,7 +5,7 @@
 ## Research questions and objectives
 
 ### Region. 
-Agulhas Current system, R = [10°E, 45°E] × [45°S, 20°S]. The box covers the current along the South African east coast, the retroflection south of Africa, and the exits both west into the Atlantic and east into the Indian Ocean.
+Agulhas Current system, **R = 10°E–45°E, 20°S–45°S** The box covers the current along the South African east coast, the retroflection south of Africa, and the exits both west into the Atlantic and east into the Indian Ocean.
 
 ### Project. 
 "Where things end up" (GDP project 3.2.2): a surface-transport operator for R.
