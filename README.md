@@ -2,14 +2,9 @@
 
 ---
 
-## Research questions and objectives
+## 1. Research questions and objectives
 
-**Region R.** R is the Agulhas Current system, defined as the box
-> **R = [10°E, 45°E] × [45°S, 20°S].**
-
-The box covers the current along the South African east coast, the retroflection south of Africa, and the exits both west into the Atlantic and east into the Indian Ocean.
-
-**Project.**"Where things end up" (Project 3.2.2 (Transport)): a surface-transport operator for R.
+**Project.** "Where things end up" (Project 3.2.2 (Transport)): a surface-transport operator for the Agulhas Current region R, defined in Section 2.
 
 **Aim.** When something is lost at sea, such as a person in a life raft, an oil slick or floating debris, responders need to know where it is likely to drift. We will build a transition matrix that estimates where surface drifters starting anywhere in R are found after a week, a month and a year, and where they eventually leave the region. The product describes the movement of near-surface water as sampled by drogued drifters; applying it to particular floating objects would need extra assumptions about wind and waves.
 
@@ -44,7 +39,13 @@ The box was selected against the data-adequacy comparison in Section 2: it holds
 
 ---
 
-## 2. Data and region
+## 2. Data/region and data description
+
+**Region.** R is the Agulhas Current system, defined as the box
+
+> **R = [10°E, 45°E] × [45°S, 20°S]**
+
+The box covers the current along the South African east coast, the retroflection south of Africa, and the exits both west into the Atlantic and east into the Indian Ocean. Extending the box west to 10°E keeps both outcomes, westward into the Atlantic and eastward back into the Indian Ocean, inside R.
 
 **Data.** We use the NOAA Global Drifter Program hourly product, version 2.01.1 (Elipot et al., 2016; 2022; doi:10.25921/x46c-3620), accessed through CloudDrift (`gdp1h()`). The record runs from 2 October 1987 to 31 October 2022. Irregular satellite fixes are mapped onto a uniform one-hour grid, which gives position, eastward and northward velocity, and an uncertainty for every estimate. Trajectory metadata and `rowsize` identify which observations belong to each drifter.
 
