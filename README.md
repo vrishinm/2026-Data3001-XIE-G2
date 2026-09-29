@@ -44,7 +44,11 @@ The box was selected against the data-adequacy comparison in Section 2: it holds
 
 ---
 
-## 2. Data availability
+## 2. Data and region
+
+**Data.** We use the NOAA Global Drifter Program hourly product, version 2.01.1 (Elipot et al., 2016; 2022; doi:10.25921/x46c-3620), accessed through CloudDrift (`gdp1h()`). The record runs from 2 October 1987 to 31 October 2022. Irregular satellite fixes are mapped onto a uniform one-hour grid, which gives position, eastward and northward velocity, and an uncertainty for every estimate. Trajectory metadata and `rowsize` identify which observations belong to each drifter.
+
+**Variables used.** Drifter identity and time; longitude and latitude, to assign cells and build 7-day endpoint pairs; drogue-loss date, to separate drogued from undrogued records; and type of death (`typedeath`), to separate drifters that ran aground, which is a true endpoint, from records that end for other reasons, which are censored.
 
 ### **Table 1.** Hourly records and distinct drifters in the chosen region and one rejected alternative.
 
@@ -55,7 +59,14 @@ The box was selected against the data-adequacy comparison in Section 2: it holds
 
 Both boxes use the boundaries given in the Week 1 illustration. Counts are from the NOAA Global Drifter Program hourly dataset v2.01.1 (Elipot et al., 2022; see References). The course pipeline (clouddrift `gdp1h()`) produced Table 1; an independent direct-Zarr stream of the same data reproduces every drifter and per-cell statistic (record counts differ by at most two at the box edges), which validates the counting method. Our count for the worked-example East Australian Current box similarly reproduces the lecturer's published 452 drifters.
 
-**Why this is enough.** Adequacy is judged by independent drifters per cell, not by raw record count: the hourly product interpolates every deployment onto a full hourly grid, so raw records overstate the information content. On the 2° grid used by the transport model, the median cell in R is visited by 116 different drifters (interquartile range 76–168), and 171 of the 178 occupied cells are visited by at least 10. Cell-to-cell transition probabilities can therefore be estimated from many independent realisations rather than from a handful of long tracks.
+**Coverage.** Repeated records within a trajectory are not independent samples, so we count distinct drifters per cell rather than records. On a 1° grid, 649 of the 875 cells in R contain records, and nearly all the empty cells are land. The median occupied cell is visited by 71 distinct drifters (10th–90th percentile 24–138), and 614 cells are visited by at least 10. On the 2° grid used for the transition matrix, the median rises to 116 drifters (interquartile range 76–168), and 171 of the 178 occupied cells are visited by at least 10.
+
+**Data issues.**
+
+- *Drogue loss.* A drifter that loses its drogue has its velocity contaminated by wind slip, so it reads systematically faster. Only 33.3% of the 3,848,969 records in R are drogued (the drogue-loss date is unknown for 0.1%), so drogued-only estimates will rest on about a third of the data.
+- *How records end.* Only `typedeath = 1` (ran aground) is a real endpoint. The other endings, such as transmitter failure, pick-up by a vessel or bad batteries, are censored and are not treated as arrivals.
+- *Uneven sampling.* Drifters gather where surface water converges and are swept out of where it diverges, so coverage is uneven across R.
+- *Usable pairs.* Taking one start per drifter per day (00:00 UTC), R yields 153,746 usable 7-day endpoint pairs from 1,121 drifters; 6.1% of them end outside R. A further 2,173 daily starts are censored because the record stops within 7 days, and 4,581 are dropped because of gaps in the hourly record.
 
 **Why Agulhas over Benguela**
 
