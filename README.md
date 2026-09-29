@@ -35,7 +35,7 @@ The box covers the current along the South African east coast, the retroflection
 
 **Data.** We use the NOAA Global Drifter Program hourly product, version 2.01.1 (Elipot et al., 2016; 2022; doi:10.25921/x46c-3620), accessed through CloudDrift (`gdp1h()`). The hourly product runs from October 1987 to October 2022, but drifter records inside R begin on 31 March 1995. Irregular satellite fixes are mapped onto a uniform one-hour grid, which gives position, eastward and northward velocity, and an uncertainty for every estimate. Trajectory metadata and `rowsize` identify which observations belong to each drifter.
 
-**Variables used.** Drifter identity and time; longitude and latitude, to assign cells and build 7-day endpoint pairs; drogue-loss date, to separate drogued from undrogued records; and type of death (`typedeath`), to separate drifters that ran aground, which is a true endpoint, from records that end for other reasons, which are censored.
+**Variables used.** Of the 1,149 drifters, 840 (73%) leave R before their record ends. Of the 309 that end inside R, 70 ran aground (typedeath = 1), which is a real endpoint; the other 239 end for other reasons (mostly transmitter failure) and are censored rather than treated as arrivals. Some of the 203 that stop transmitting inside R may be unrecorded groundings, so grounding is likely undercounted.
 
 ### **Table 1.** Hourly records and distinct drifters in the chosen region and one rejected alternative.
 
@@ -50,10 +50,10 @@ Both boxes use the boundaries given in the Week 1 illustration. Counts are from 
 
 **Data issues.**
 
-- *Drogue loss.* A drifter that loses its drogue has its velocity contaminated by wind slip, so it reads systematically faster. Only 33.3% of the records in R are drogued; two independent drogue flags in the dataset agree on 99.9% of records, and drogues typically last about six months (median 173 days). Restricted to drogued records, the median cell falls to 22 drifters and 94 cells drop below 10, mostly along the Agulhas Current core off the east coast (Figure 3). We therefore estimate the main operator from all drifters and repeat it with drogued drifters only as a sensitivity check.
-- *How records end.* Only `typedeath = 1` (ran aground) is a real endpoint. The other endings, such as transmitter failure, pick-up by a vessel or bad batteries, are censored and are not treated as arrivals.
-- *Uneven sampling.* Drifters gather where surface water converges and are swept out of where it diverges, so coverage is uneven across R.
-- *Usable pairs.* Taking one start per drifter per day (00:00 UTC), R yields 153,746 usable 7-day endpoint pairs from 1,121 drifters; 6.1% of them end outside R. A further 2,173 daily starts are censored because the record stops within 7 days, and 4,581 are dropped because of gaps in the hourly record.
+- **Drogue loss.** A drifter that loses its drogue has its velocity contaminated by wind slip, so it reads systematically faster. Only 33.3% of the records in R are drogued; two independent drogue flags in the dataset agree on 99.9% of records, and drogues typically last about six months (median 173 days). Restricted to drogued records, the median cell falls to 22 drifters and 94 cells drop below 10, mostly along the Agulhas Current core off the east coast (Figure 3). We therefore estimate the main operator from all drifters and repeat it with drogued drifters only as a sensitivity check.
+- **How records end.** Most drifters (840 of 1,149) have already left R when their record stops, so for us they are exits rather than destinations. Of the 309 that end inside R, 70 ran aground, the only ending we treat as a real endpoint; the rest are censored. Since 203 drifters stopped transmitting inside R, some groundings were probably never logged, so we expect to underestimate them and will check how close those last positions are to the coast.
+- **Uneven sampling.** Drifters gather where surface water converges and are swept out of where it diverges, so coverage is uneven across R.
+- **Usable pairs.** Taking one start per drifter per day (00:00 UTC), R yields 153,746 usable 7-day endpoint pairs from 1,121 drifters; 6.1% of them end outside R. A further 2,173 daily starts are censored because the record stops within 7 days, and 4,581 are dropped because of gaps in the hourly record.
 
 **Why Agulhas over Benguela**
 
