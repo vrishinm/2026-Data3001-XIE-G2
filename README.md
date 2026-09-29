@@ -4,6 +4,8 @@
 
 ## 1. Research questions and objectives
 
+**Region R.** Agulhas Current system, R = [10°E, 45°E] × [45°S, 20°S]. The box covers the current along the South African east coast, the retroflection south of Africa, and the exits both west into the Atlantic and east into the Indian Ocean.
+
 **Project.** "Where things end up" (Project 3.2.2 (Transport)): a surface-transport operator for the Agulhas Current region R, defined in Section 2.
 
 **Aim.** When something is lost at sea, such as a person in a life raft, an oil slick or floating debris, responders need to know where it is likely to drift. We will build a transition matrix that estimates where surface drifters starting anywhere in R are found after a week, a month and a year, and where they eventually leave the region. The product describes the movement of near-surface water as sampled by drogued drifters; applying it to particular floating objects would need extra assumptions about wind and waves.
