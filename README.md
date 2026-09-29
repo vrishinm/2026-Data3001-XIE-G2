@@ -25,21 +25,7 @@
 
 ---
 
-## 1. Region and motivation
-
-**Region R.** R is the greater Agulhas Current system, defined as the box
-
-> **R = 10°E–45°E, 20°S–45°S** (35° × 25°; 178 of 234 occupied 2° cells)
-
-The box was selected against the data-adequacy comparison in Section 2: it holds 3.85 million hourly records from 1,149 independent drifters, and most 1° cells are visited by many independent drifters.
-
-**Why this region matters.** The Agulhas Current is one of the strongest western boundary currents in the Southern Hemisphere; it carries warm, saline Indian Ocean water southwest along the South African coast before retroflecting south of the continent and returning east as the Agulhas Return Current (Lutjeharms, 2006). Rings shed at the retroflection export Indian Ocean water into the South Atlantic — "Agulhas leakage" — a process implicated in the Atlantic overturning circulation and in past climate change (de Ruijter et al., 1999; Beal et al., 2011). The system also supports major regional fisheries, and it underlies search-and-rescue, debris- and spill-response planning along one of the world's busiest shipping routes: in each case the operative question is where the surface water — and anything floating in it — goes. R is also among the best-sampled regions of the Global Drifter Program, which makes a data-driven transport operator feasible here.
-
-**Multiple flow regimes.** R is expected to contain several distinct regimes — the Mozambique Channel inflow in the north-east, the narrow Agulhas core jet along the coast, the retroflection and ring-shedding corridor in the south-west, and the eastward return current — so material transport within R is likely to be strongly asymmetric and directional rather than diffusive.
-
----
-
-## 2. Data/region and data description
+## Data/region and data description
 
 **Region.** R is the Agulhas Current system, defined as the box
 
