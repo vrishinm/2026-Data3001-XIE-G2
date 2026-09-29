@@ -1,13 +1,18 @@
-# DATA3001 Term 3 2026 — Project 3.2.2: "Where things end up"
+# 2026-DATA3001-Yiyuan Xie-Group2
 
-## A surface-transport operator for the Agulhas region
+---
 
-Project proposal / repository README (15%, 3 A4 pages + references).
-Due Sunday Week 3 per the project brief
+## Research questions and objectives
 
-**Client:** Shane Elipot (Rosenstiel School, University of Miami)
-**Group:** 2
-**Repository:** `https://github.com/vrishinm/Data3001-Assignment-Group-2`
+### Region. 
+Agulhas Current system, R = [10°E, 45°E] × [45°S, 20°S]. The box covers the current along the South African east coast, the retroflection south of Africa, and the exits both west into the Atlantic and east into the Indian Ocean.
+
+### Project. 
+"Where things end up" (GDP project 3.2.2): a surface-transport operator for R.
+
+### Aim. 
+When something is lost at sea, such as a person in a life raft, an oil slick or floating debris, responders need to know where it is likely to drift. We will build a transition matrix that estimates where surface drifters starting anywhere in R are found after a week, a month and a year, and where they eventually leave the region. The product describes the movement of near-surface water as sampled by drogued drifters; applying it to particular floating objects would need extra assumptions about wind and waves.
+
 
 ---
 
