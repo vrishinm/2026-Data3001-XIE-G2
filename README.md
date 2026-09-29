@@ -21,12 +21,12 @@ The box covers the current along the South African east coast, the retroflection
 
 **Objectives.**
 
-- **O1 Data.** Preserve drifter identity and timestamps, including the observations outside R that are needed to establish destinations. Count the usable endpoint pairs and the distinct drifters per starting cell. Separate observed exits from missing future observations.
-- **O2 Transition matrix.** Estimate $P_{ij} = \Pr(X_{t+7\ \mathrm{days}} \in j \mid X_t \in i)$ from observed endpoint pairs on 2° cells, with an absorbing outside-region state that represents the first recorded exit. Combine poorly supported cells.
-- **O3 Product.** Deliver a transition matrix that someone else can pick up and iterate forward, together with what it says about where the chosen release points end up, and about where R as a whole gathers material and where it loses it.
-- **O4 Validation.** Split training and evaluation data by drifter, and compare predicted with observed destinations for the held-out drifters.
-- **O5 Sensitivity.** Test how sensitive the results are to the chosen interval. Account for drogue status, because drifters that have lost their drogue have velocities contaminated by wind slip. Inspect seasonal coverage before pooling transitions.
-- **O6 Region-independence.** Nothing in the code depends on the exact R, so all functions work when given a different region.
+- **1. Data.** Preserve drifter identity and timestamps, including the observations outside R that are needed to establish destinations. Count the usable endpoint pairs and the distinct drifters per starting cell. Separate observed exits from missing future observations.
+- **2. Transition matrix.** Estimate $P_{ij} = \Pr(X_{t+7\ \mathrm{days}} \in j \mid X_t \in i)$ from observed endpoint pairs on 2° cells, with an absorbing outside-region state that represents the first recorded exit. Combine poorly supported cells.
+- **3. Product.** Deliver a transition matrix that someone else can pick up and iterate forward, together with what it says about where the chosen release points end up, and about where R as a whole gathers material and where it loses it.
+- **4. Validation.** Split training and evaluation data by drifter, and compare predicted with observed destinations for the held-out drifters.
+- **5. Sensitivity.** Test how sensitive the results are to the chosen interval. Account for drogue status, because drifters that have lost their drogue have velocities contaminated by wind slip. Inspect seasonal coverage before pooling transitions.
+- **6. Region-independence.** Nothing in the code depends on the exact R, so all functions work when given a different region.
 
 ---
 
