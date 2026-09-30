@@ -14,7 +14,7 @@
 **Objectives.**
 - Build 7-day endpoint pairs, keeping positions outside R so that leaving the box counts as an outcome rather than as missing data.
 - Estimate $P_{ij}=Pr(X_{t+7 days} ∈ j | X_t ∈ i )$  on 2° cells, which are coarser than our 1° data summary, so each row rests on enough drifters.
-- Get the 30- and 365-day answers by applying P repeatedly (P4, P52) instead of relying on the few tracks that stay in R for a whole year. This assumes the next week depends only on where a drifter is now, which we will test in RQ3.
+- Get the 30- and 365-day answers by applying P repeatedly ($P_4, P_{52}$) instead of relying on the few tracks that stay in R for a whole year. This assumes the next week depends only on where a drifter is now, which we will test in RQ3.
 - Hold out whole drifters, not single records, since records from the same drifter are strongly linked. We will count how often a drifter's actual 7-day position falls in the matrix's top three predicted cells, compare this with simply assuming it stays put, and repeat the analysis with drogued drifters only and with a 3-day interval.
 - Save P and the code so that someone else can load the matrix and rerun it for a different region.
 
@@ -44,6 +44,17 @@ The Agulhas runs south-west along the South African coast at mean speeds of 60�
 Our question has partly been asked before. McAdam and van Sebille (2018) built transition matrices from GDP drifters and released tracer at one point in the Agulhas Current (31°E, 32°S). They found that 18–25% leaked into the Atlantic and 55–61% entered the Return Current. They also warned that putting trajectories on a grid creates "artificial dispersion", which grows with larger cells and shorter time steps, so results shift with the time step chosen.
 
 We see three things we can add. First, they released tracer from a single point, whereas we want to know how the leakage share changes with the starting cell, which is our primary question. Second, they used the older 6-hourly data with steps of 5–180 days. We use the hourly product with a 7-day step, and their warning is exactly why RQ3 tests the interval. Third, we check predictions against drifters held out of the matrix. Their 18–25% also gives us a sanity check: our matrix, started near 31°E, 32°S, should land somewhere close.
+
+## Proposed method
+We will work in Python on Colab, using CloudDrift to load the data and GitHub to share code.
+
+**Building the pairs.** For every drifter in R we take one position per day and find where the same drifter is 7 days later. If it has left R, the pair ends in an absorbing outside state that marks its first recorded exit. We check the hourly positions in between, not just day 7, so that a drifter that leaves and later returns is still counted as having exited. If the record ends because the drifter ran aground (typedeath = 1), the pair ends in a "grounded" state. If the drifter simply stops transmitting, we drop the pair, since we don't know where it went. We use all drifters, drogued or not, as McAdam and van Sebille (2018) also did, and keep a drogue flag for later.
+
+**The matrix.** We count the pairs between 2° cells and divide each row by its total, so each row adds to 1. Cells visited by fewer than 10 distinct drifters are merged with a neighbour, so no row rests on one or two tracks.
+
+**Answering the RQs.** For RQ1 we apply $P, P_4$ (28 days, our "month") and $P_{52}$ (a year) to each starting cell. For RQ2 and our primary question, we split the outside state by the side of R it crosses (west, east, south or north), so we can see how much material leaves towards the Atlantic versus the Indian Ocean. We also read off P which cells send material to which, and which are rarely reached from anywhere else. To see where R gathers material, we spread material evenly over R, apply P repeatedly, and look at where it piles up and which cells empty fastest.
+
+**Checking.** We hold out 20% of drifters as whole tracks. For their 7-day moves, we record how often the true cell is among P's three most likely cells, and compare this with guessing that the drifter stays put. We then rebuild P with drogued drifters only, with a 3-day step, and by season. McAdam and van Sebille (2018) showed that gridding adds artificial spread that depends on cell size and time step, so if our answers change a lot between versions, we will report that rather than pick the most convenient one.
 
 ## Reference
 - Centurioni, L. R., et al. (2019). Global in situ observations of essential climate and ocean variables at the air–sea interface. Frontiers in Marine Science, 6, 419.
