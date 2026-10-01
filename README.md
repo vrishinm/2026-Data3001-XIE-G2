@@ -1,4 +1,4 @@
-# 2026-DATA3001-Yiyuan Xie-Group2
+# Proposal
 
 ---
 ## Research questions and objectives
