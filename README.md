@@ -30,7 +30,7 @@ Table 1. Records and distinct drifters in the two candidate boxes.
 | **chosen R (Agulhas)** | 10°E–45°E | 45°S–20°S | 3,848,969 | 1,149 |
 | Benguela (rejected) | 0°–20°E | 38°S–15°S | 2,538,266 | 706 |
 
-**Data.** We use the NOAA Global Drifter Program hourly product v2.01.1 (Elipot et al., 2016; 2022), accessed through CloudDrift on [date]. One thing we didn't expect: although the product starts in 1987, the first record inside R is from March 1995, so we really have about 27 years of data. Because each drifter reports every hour, one slow drifter can fill a cell with hundreds of almost identical records. We therefore count distinct drifters rather than records.
+**Data.** We use the NOAA Global Drifter Program hourly product v2.01.1 (Elipot et al., 2016; 2022), accessed through CloudDrift on 22/09/26. One thing we didn't expect: although the product starts in 1987, the first record inside R is from March 1995, so we really have about 27 years of data. Because each drifter reports every hour, one slow drifter can fill a cell with hundreds of almost identical records. We therefore count distinct drifters rather than records.
 Variables. Drifter ID, time, latitude, longitude, drogue-loss date and typedeath. That's all the matrix needs: where a drifter is now and where it is a week later.
 
 ## Why this problem is important
