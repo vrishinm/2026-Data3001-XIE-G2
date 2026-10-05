@@ -7,14 +7,17 @@
 **Aim.** If a life raft, an oil slick or floating debris goes into the water off South Africa, responders need a quick answer about where it is likely to drift. We want to build a transition matrix from past drifter tracks that gives this answer for any starting point in R, and that others can reuse and iterate forward.
 
 **Primary question.** How does the starting location in R decide whether material heads west into the Atlantic or turns back east into the Indian Ocean? We chose this because the retroflection splits the flow into two very different outcomes, and a transition matrix should be able to show where that split happens.
-- RQ1. For three well-supported starting cells, where are drifters found after 7, 30 and 364 days, i.e. 4 and 52 weekly steps?
-- RQ2. Which parts of R feed which others, which are cut off from the rest, and where does R gather or lose material?
+- RQ1. For three well-supported starting cells, chosen on different sides of where the current turns back, where are drifters found after 7, 28 and 364 days (1, 4 and 52 weekly steps), and how many of them have gone west towards the Atlantic rather than east?
+- RQ2. Which parts of R feed which others, which are cut off from the rest, and where does R gather or lose material? In particular, which starting cells send most of their drifters out to the west, and which send them east?
 - RQ3. How well does the matrix predict held-out drifters, and how sensitive is it to the time interval, drogue status and season?
 
 **Objectives.**
-- Build 7-day pairs, keeping positions outside R so that leaving the box counts as an outcome rather than as missing data.
-- Estimate $P_{ij}=Pr(X_{t+7 days} ∈ j | X_t ∈ i )$  on 2° cells, which are coarser than our 1° data summary, so each row rests on enough drifters.
-- Get the 30- and 365-day answers by applying P repeatedly ($P^4, P^{52}$) instead of relying on the few tracks that stay in R for a whole year. This assumes the next week depends only on where a drifter is now, which we will test in RQ3.
+- Build 7-day pairs, keeping each drifter's identity, timestamps and positions outside R, so that leaving the box counts as an outcome rather than as missing data.
+- Count usable pairs and distinct drifters for each starting cell, and merge poorly supported cells with a neighbour before trying anything more complicated.
+- Separate real exits from records that simply stop. A drifter's first recorded exit ends the pair in an absorbing outside state, and we check the hourly records in between, since a drifter can leave and come back within the 7 days.
+- Estimate $P_{ij}=\Pr(X_{t+7\,\text{days}} \in j \mid X_t \in i)$ on 2° cells, which are coarser than our 1° data summary, so each row rests on enough drifters.
+- Get the 28- and 364-day answers by applying P repeatedly ($P^4, P^{52}$) instead of relying on the few tracks that stay in R for a whole year. This assumes the next week depends only on where a drifter is now, which we will test in RQ3.
+- Look at seasonal coverage before pooling all transitions into one matrix.
 - Hold out whole drifters, not single records, since records from the same drifter are strongly linked. We will count how often a drifter's actual 7-day position falls in the matrix's top three predicted cells, compare this with simply assuming it stays put, and repeat the analysis with drogued drifters only and with a 3-day interval.
 - Save P and the code so that someone else can load the matrix and rerun it for a different region.
 
@@ -50,7 +53,7 @@ We will work in Python on Colab, using CloudDrift to load the data and GitHub to
 
 **The matrix.** We count the pairs between 2° cells and divide each row by its total, so each row adds to 1. 171 of the 177 starting cells already have at least 10 distinct drifters, and the other 6 are merged with a neighbour so no row rests on one or two tracks. This is the same drifter-based approach Miron et al. (2017) used to map connections in the Gulf of Mexico.
 
-**Answering the RQs.** For RQ1 we apply $P, P^4$ (28 days, our "month") and $P^{52}$ (a year) to each starting cell. For RQ2 and our primary question, we split the outside state by the side of R it crosses (west, east, south or north), so we can see how much material leaves towards the Atlantic versus the Indian Ocean. We also read off P which cells send material to which, and which are rarely reached from anywhere else. To see where R gathers material, we spread material evenly over R, apply P repeatedly, and look at where it piles up and which cells empty fastest.
+**Answering the RQs.** For RQ1 we apply $P, P^4$ (28 days, our "month") and $P^{52}$ (a year) to each starting cell. For RQ1, RQ2 and our primary question, we split the outside state by the side of R it crosses (west, east, south or north), so we can see how much material leaves towards the Atlantic versus the Indian Ocean. We also read off P which cells send material to which, and which are rarely reached from anywhere else. To see where R gathers material, we spread material evenly over R, apply P repeatedly, and look at where it piles up and which cells empty fastest.
 
 **Checking.** We hold out 20% of drifters as whole tracks. For their 7-day moves, we record how often the true cell is among P's three most likely cells, and compare this with guessing that the drifter stays put. We then rebuild P with drogued drifters only, with a 3-day step, and by season. McAdam and van Sebille (2018) showed that gridding adds artificial spread that depends on cell size and time step, so if our answers change a lot between versions, we will report that rather than pick the most convenient one.
 
