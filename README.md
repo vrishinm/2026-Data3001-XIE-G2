@@ -100,12 +100,12 @@ Everything here comes from `Proposal_code.ipynb`. Our main takeaway is that the 
 
 **Spatial coverage.** Figure 1 shows distinct drifters per 1° cell. 614 of the 649 occupied cells have at least 10 drifters (median 71). The thin cells are mostly at the far south-west corner and right against the coast, which are also where we expect to merge cells.
 
-![Figure 1](figures/fig1_coverage_1deg.png)
+<img width="700" height="551" alt="download (1)" src="https://github.com/user-attachments/assets/867b32f4-f4e6-4626-b74c-1ea8ec5ffd68" />
 *Figure 1. Distinct drifters per 1° cell in R, 1995–2022. Crosses mark cells with fewer than 10 drifters; white ocean cells have no records.*
 
 **Coverage over time and season.** Every year from 1995 to 2022 has at least one drifter in R, but the early years are very thin: a median of 7 drifters per year in 1995–1999, against 62 in 2000–2009 and 83 in 2010–2022 (Figure 2). In practice our matrix mostly describes the 2000s onwards, which is fine for a transport question but means we shouldn't use it to say anything about change over time. Seasons are much more even (Table 2), so splitting by season in RQ3 looks feasible.
 
-![Figure 2](figures/fig2_drifters_per_year.png)
+<img width="684" height="301" alt="download (2)" src="https://github.com/user-attachments/assets/1dad5d05-3649-475a-96bd-33ea248e1791" />
 *Figure 2. Distinct drifters in R per year.*
 
 **Table 2.** Coverage by austral season (1° cells).
@@ -119,7 +119,7 @@ Everything here comes from `Proposal_code.ipynb`. Our main takeaway is that the 
 
 **Drogue status.** Only 33.3% of records in R come from drogued drifters (we checked this two ways, using `drogue_lost_date` and the per-record `drogue_status` flag, and they agree 99.9% of the time). With drogued drifters only, the median per 1° cell drops from 71 to 22, and 94 cells that were well supported fall below 10 (Figure 3). This is why we use all drifters for the main matrix and treat the drogued-only version as a check on 2° cells, rather than the other way round. Undrogued drifters are pushed faster by the wind, so if the two versions disagree, we will learn something about how much wind slip affects the west/east split.
 
-![Figure 3](figures/fig3_drogued_1deg.png)
+<img width="700" height="551" alt="download (3)" src="https://github.com/user-attachments/assets/8a74825c-d758-4ac9-8aaf-900aac8ea19c" />
 *Figure 3. Distinct drogued drifters per 1° cell in R, same colour bins as Figure 1.*
 
 **How drifters end.** Table 3 shows most drifters (840, 73.1%) leave R before their record ends, which is exactly what the outside states are for. The 203 drifters that "stop transmitting" inside R worry us a little: near the coast, some of them may really have run aground without being recorded as such.
