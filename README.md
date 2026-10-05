@@ -139,18 +139,21 @@ Everything here comes from `Proposal_code.ipynb`. Our main takeaway is that the 
 
 ## 7. Timeline and plan
 
-Week 1 started on 14 September. Weeks 1–3 are done: region chosen, data loaded, audit and coverage checks finished, and the 7-day pairs built.
+Week 1 started on 14 September. Weeks 1–3 are done: region chosen, data loaded, audit and coverage checks finished, and the 7-day pairs built. We planned the remaining weeks around the course assessments, since each one is a natural checkpoint for a part of the project.
 
-| Week (starting) | Task | Output |
+| Week (starting) | Task | Output / assessment |
 |---|---|---|
 | 1–3 (14 Sep) | Region choice, data access, audit, coverage, 7-day pairs | Done: Tables 1–3, Figures 1–3, `pairs7.csv` |
-| 4 (5 Oct) | Proposal | This README (due 8 Oct) |
-| 5 (12 Oct) | Add grounded state; merge the 6 thin cells; build P; 80/20 split by drifter | First version of P, row checks |
-| 6 (19 Oct, flexibility week) | RQ1: three starting cells at 7, 28, 364 days; sanity check at 31°E, 32°S | RQ1 maps; comparison with McAdam and van Sebille (2018) |
+| 4 (5 Oct) | Proposal | **Proposal/README**, Thu 8 Oct |
+| 5 (12 Oct) | Add grounded state; merge the 6 thin cells; build the first P; 80/20 split by drifter | **Poster session**, Thu 15 Oct (in class) |
+| 6 (19 Oct) | RQ1: three starting cells at 7, 28, 364 days; sanity check at 31°E, 32°S | **Peer review of posters**, Thu 22 Oct |
 | 7 (26 Oct) | RQ2: connectivity, where R gathers and loses material, west/east map by starting cell | RQ2 maps |
 | 8 (2 Nov) | RQ3: top-3 hit rate vs "stays put"; $P^4$ vs direct 28-day pairs; drogued-only, 3-day and seasonal versions | Validation table and sensitivity figures |
-| 9 (9 Nov) | Package P with a loader function; rerun on a second box to check nothing depends on R; draft report | Reusable product; report draft |
-| 10 (16 Nov) | Final report and presentation | Submission (dates per Moodle) |
+| 9 (9 Nov) | Package P with a loader function; rerun on a second box to check nothing depends on R; plan slides and report outline | Reusable product |
+| 10 (16 Nov) | Rehearse and present | **Group presentation**, 12 + 3 min, in class |
+| 11 (23 Nov) | Write up, using feedback from the presentation | **Modelling report** (15 pages), Thu 26 Nov |
+
+The poster comes only a week after this proposal, so we don't expect RQ1 results by then. We plan to show the data checks and the first pooled west/east exit split, and use the discussion with our lecturer to settle the three starting cells before we commit to them in Week 6. Reviewing another group's poster in Week 6 is also a chance to see how other groups handle drifter support per cell, which is the part we are least sure about.
 
 **Risks and fallbacks.** The Week 1 slides suggest fixing support problems by combining cells or changing the box or horizon before adding model complexity (slide 18). We used that as our rule.
 
@@ -161,7 +164,7 @@ Week 1 started on 14 September. Weeks 1–3 are done: region chosen, data loaded
 | Artificial dispersion from the grid | Answers shift a lot between 7-day and 3-day steps | Report the range across versions instead of one number |
 | Data download drops mid-transfer | CloudDrift / S3 errors in Colab | Already handled with retries in the loader; results saved to `gdp_out/` so we don't reload |
 
-We think this scope fits the remaining six weeks because the slowest part, building clean pairs, is already done, and P is a counting step on top of it. That leaves most of the time for checking whether the matrix can be trusted, which is the part we expect to learn the most from.
+We think this scope fits the remaining seven weeks because the slowest part, building clean pairs, is already done, and P is a counting step on top of it. That leaves most of the time for checking whether the matrix can be trusted, which is the part we expect to learn the most from.
 
 **Repository.** We will tidy the repo towards the layout suggested in Week 1 (slide 19): `src/` for data access, filtering and the matrix code, `results/` for P and the summary counts, `figures/` for maps, and an `environment.yml` and `data/README.md` recording package versions and the data release, so someone else can rerun everything.
 
