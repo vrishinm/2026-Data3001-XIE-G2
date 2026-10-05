@@ -46,7 +46,7 @@ We ran the same counting on four boxes (Table 1). Benguela has far fewer drifter
 | Tighter Agulhas | 10°E–40°E | 45°S–25°S | 3,020,671 | 1,051 | 125 / 150 | 123 | 137 (101) |
 | Source region only | 20°E–45°E | 40°S–20°S | 1,827,496 | 628 | 92 / 130 | 90 | 98 (70) |
 
-**Data.** We use the NOAA Global Drifter Program hourly product v2.01.1 (Elipot et al., 2016; 2022), accessed through CloudDrift `gdp1h()` on 22/09/26. Each drifter follows the water at 15 m through its drogue, and the hourly product gives a position, velocity and sea-surface temperature on a regular one-hour grid, each with an uncertainty (GDP Overview, Section 2). For a transition matrix we only need `lon`, `lat`, `time` and `rowsize` (to know which rows belong to which drifter), plus `drogue_lost_date` and `typedeath` per drifter.
+**Data.** We use the NOAA Global Drifter Program hourly product v2.01.1 (Elipot et al., 2016; 2022), accessed through CloudDrift `gdp1h()` on 22 September 2026. Each drifter follows the water at 15 m through its drogue, and the hourly product gives a position, velocity and sea-surface temperature on a regular one-hour grid, each with an uncertainty (GDP Overview, Section 2). For a transition matrix we only need `lon`, `lat`, `time` and `rowsize` (to know which rows belong to which drifter), plus `drogue_lost_date` and `typedeath` per drifter.
 
 A few things we checked before trusting any count:
 
@@ -57,7 +57,7 @@ A few things we checked before trusting any count:
 
 ## 3. Why this problem matters
 
-We picked this project because of a simple question: when something goes into the sea, the first thing anyone wants to know is where it will end up. The GDP Overview points out that search and rescue, spill response and fisheries management all rest on the same estimate of where surface water goes (Section 1). What makes it hard in the Agulhas is that the current is fast and full of eddies. Looking at the global drifter record, western boundary currents like this one have some of the highest eddy energy anywhere (Lumpkin & Johnson, 2013). So we don't think a single "best guess" path is very useful here. A small shift in where something starts could send it somewhere completely different, which is why we want a spread of possible destinations instead.
+We picked this project because of a simple question: when something goes into the sea, the first thing anyone wants to know is where it will end up. The GDP Overview points out that search and rescue, spill response and fisheries management all rest on the same estimate of where surface water goes (Section 1). What makes it hard in the Agulhas is that the current is fast and full of eddies. In the global drifter record, the Agulhas Retroflection stands out alongside the Gulf Stream and Kuroshio as one of the most eddy-energetic regions in the world ocean (Lumpkin & Johnson, 2013). So we don't think a single "best guess" path is very useful here. A small shift in where something starts could send it somewhere completely different, which is why we want a spread of possible destinations instead.
 
 The west-versus-east split is the part we find most interesting. South of Africa most of the current turns back east, but some water carries on into the Atlantic, so this is a place where two oceans exchange surface water. Drifters suit this question because they measure the flow directly by moving with it, while satellites only infer it and lose features smaller than about a hundred kilometres (GDP Overview, Section 1). In a region this full of eddies, that is a real loss.
 
@@ -65,14 +65,14 @@ We also want to be clear about what our answer can and can't say. Our probabilit
 
 ## 4. Background and existing studies
 
-The Agulhas runs south-west along the South African coast at mean speeds of 60–150 cm/s (Lumpkin & Johnson, 2013), then turns back on itself south of Africa. Studies do not agree on exactly where this happens. Drifter averages put the turn at 20–23°E (Lumpkin & Johnson, 2013), while 26 years of satellite data place it at 15–20°E and show it moving, with early turns more common in spring and summer (Russo et al., 2021). To us this means the split is not fixed, which is why we check seasons.
+The Agulhas runs south-west along the South African coast at mean speeds of 60–150 cm/s (Lumpkin & Johnson, 2013), then turns back on itself south of Africa (the retroflection). Studies do not agree on exactly where this happens. Drifter averages put the turn at 20–23°E in the mean (Lumpkin & Johnson, 2013), while 26 years of satellite altimetry (1993–2018) place it mostly between 15°E and 20°E and show it moving, with early retroflections more common in austral spring and summer (Russo et al., 2021). To us this means the split is not fixed, which is why we check seasons.
 
-Our question has partly been asked before. McAdam and van Sebille (2018) built transition matrices from GDP drifters and released tracer at one point in the Agulhas Current (31°E, 32°S). They found that 18–25% leaked into the Atlantic and 55–61% entered the Return Current. They also warned that putting trajectories on a grid creates "artificial dispersion", which grows with larger cells and shorter time steps, so results shift with the time step chosen. Miron et al. (2017) used the same drifter-based idea to map which parts of the Gulf of Mexico are connected, which shows the method can say something about a whole region, not just one release point.
+Our question has partly been asked before. McAdam and van Sebille (2018) built transition matrices from GDP drifters and released tracer at one point in the Agulhas Current (31°E, 32°S). Using a 60-day time step, they found that 18–25% of the tracer leaked into the Atlantic (which they define as crossing the Good Hope line) and 55–61% turned back in the retroflection. They also warned that putting trajectories on a grid creates "artificial dispersion", which grows with larger cells and shorter time steps, so results shift with the time step chosen. Miron et al. (2017) used the same drifter-based idea to map which parts of the Gulf of Mexico are connected, which shows the method can say something about a whole region, not just one release point.
 
 Since this has partly been done, we asked ourselves what is actually new for us. We see three things:
 1. They released tracer from a single point, whereas we want to know how the Atlantic share changes with the starting cell, which is our primary question.
-2. They used the older 6-hourly data with steps of 5–180 days. We use the hourly product, which the GDP Overview introduces precisely because six-hourly sampling aliases tides and inertial motion into the signal (Section 2). For us the practical benefit is that we can see short exits and returns inside the 7 days (Section 5). Their warning about artificial dispersion is also exactly why RQ3 tests the step length.
-3. We check predictions against drifters held out of the matrix. Their 18–25% also gives us a sanity check: our matrix, started near 31°E, 32°S, should land somewhere close.
+2. They used the older 6-hourly data (from 1993 onwards) with time steps of 5, 20, 60 and 180 days. We use the hourly product, which the GDP Overview explains avoids the aliasing of tides and inertial motion that six-hourly sampling causes (Section 2). For us the practical benefit is that we can see short exits and returns inside the 7 days (see our Section 5). Their warning about artificial dispersion is also exactly why RQ3 tests the step length.
+3. We check predictions against drifters held out of the matrix. Their 18–25% also gives us a sanity check: our matrix, started near 31°E, 32°S, should land somewhere close. We don't expect an exact match, though. Our "west" exit is the 10°E edge of R, not the Good Hope line. Also, by their own result, artificial dispersion is larger for short time steps, so a 7-day matrix iterated many times may spread tracer more than their 60-day one did.
 
 ## 5. Proposed method
 
@@ -100,7 +100,7 @@ We work in Python on Google Colab, using CloudDrift to load the data and GitHub 
 
 Everything here comes from `Proposal_code.ipynb`. Our main takeaway is that the data can support the matrix overall, but drogue status and the sparse late 1990s are the two places where we have to be careful. The maps use a single-hue blue scale so they still read for colour-blind viewers, and cells with fewer than 10 drifters are marked with a cross rather than by colour alone.
 
-**Spatial coverage.** Figure 1 shows distinct drifters per 1° cell. 614 of the 649 occupied cells have at least 10 drifters (median 71). The thin cells sit along the Namibian coast in the north-west corner, right against the South African coast, and near Madagascar in the north-east corner. The open ocean is well covered. The darkest band, around 38–41°S, follows the Agulhas Return Current. We read this as a sign of the sampling bias the GDP Overview describes: drifters crowd into the strong eastward jet, so that band is well supported for transitions, but its density on its own doesn't tell us that material "gathers" there.
+**Spatial coverage.** Figure 1 shows distinct drifters per 1° cell. 614 of the 649 occupied cells have at least 10 drifters (median 71). The thin cells sit along the Namibian coast in the north-west corner, right against the South African coast, and near Madagascar in the north-east corner. The open ocean is well covered. The darkest band, around 38–41°S, follows the Agulhas Return Current. We read this as a sign of the sampling bias the GDP Overview describes (Section 3.2.1): drifters crowd into the strong eastward jet, so that band is well supported for transitions, but its density on its own doesn't tell us that material "gathers" there.
 
 <img width="700" height="551" alt="download (1)" src="https://github.com/user-attachments/assets/867b32f4-f4e6-4626-b74c-1ea8ec5ffd68" />
 
@@ -170,12 +170,19 @@ We think this scope fits the remaining seven weeks because the slowest part, bui
 
 ## References
 
-- Centurioni, L. R., et al. (2019). Global in situ observations of essential climate and ocean variables at the air–sea interface. *Frontiers in Marine Science*, 6, 419.
-- DATA3001 (2026). *The Global Drifter Program hourly dataset* (GDP Overview), Term 3, UNSW Sydney.
-- Elipot, S., Lumpkin, R., Perez, R. C., Lilly, J. M., Early, J. J., & Sykulski, A. M. (2016). A global surface drifter data set at hourly resolution. *Journal of Geophysical Research: Oceans*, 121, 2937–2966. doi:10.1002/2016JC011716
-- Elipot, S., Sykulski, A., Lumpkin, R., Centurioni, L., & Pazos, M. (2022). Hourly location, current velocity, and temperature collected from Global Drifter Program drifters world-wide (v2.01.1). NOAA National Centers for Environmental Information. doi:10.25921/x46c-3620. Accessed 22/09/26.
-- Lumpkin, R., & Johnson, G. C. (2013). Global ocean surface velocities from drifters: Mean, variance, El Niño–Southern Oscillation response, and seasonal cycle. *Journal of Geophysical Research: Oceans*, 118, 2992–3006.
-- McAdam, R., & van Sebille, E. (2018). Surface connectivity and interocean exchanges from drifter-based transition matrices. *Journal of Geophysical Research: Oceans*, 123, 514–532. doi:10.1002/2017JC013363
-- Miron, P., Beron-Vera, F. J., Olascoaga, M. J., Sheinbaum, J., Pérez-Brunius, P., & Froyland, G. (2017). Lagrangian dynamical geography of the Gulf of Mexico. *Scientific Reports*, 7, 7021.
-- Russo, C. S., Lamont, T., & Krug, M. (2021). Spatial and temporal variability of the Agulhas Retroflection: Observations from a new objective detection method. *Remote Sensing of Environment*, 253, 112239.
-- Xie, Y. (2026). *DATA3001 Week 1: A worked example*, Term 3, UNSW Sydney.
+**Course materials** (cited in the text by these short names)
+
+- **GDP Overview:** UNSW DATA3001. (2026). *The Global Drifter Program hourly dataset* [Course notes]. DATA3001 Data Science and Decisions in Practice, Term 3, UNSW Sydney.
+- **Week 1 slides:** Xie, Y. (2026). *DATA3001 Week 1: A worked example — Preliminary regional results and a California Current illustration* [Lecture slides]. UNSW Sydney.
+
+**Data**
+
+- Elipot, S., Sykulski, A., Lumpkin, R., Centurioni, L., & Pazos, M. (2022). *Hourly location, current velocity, and temperature collected from Global Drifter Program drifters world-wide* (Version 2.01.1) [Data set]. NOAA National Centers for Environmental Information. https://doi.org/10.25921/x46c-3620. Accessed 22 September 2026 via CloudDrift.
+
+**Literature**
+
+- Elipot, S., Lumpkin, R., Perez, R. C., Lilly, J. M., Early, J. J., & Sykulski, A. M. (2016). A global surface drifter data set at hourly resolution. *Journal of Geophysical Research: Oceans, 121*(5), 2937–2966. https://doi.org/10.1002/2016JC011716
+- Lumpkin, R., & Johnson, G. C. (2013). Global ocean surface velocities from drifters: Mean, variance, El Niño–Southern Oscillation response, and seasonal cycle. *Journal of Geophysical Research: Oceans, 118*(6), 2992–3006. https://doi.org/10.1002/jgrc.20210
+- McAdam, R., & van Sebille, E. (2018). Surface connectivity and interocean exchanges from drifter-based transition matrices. *Journal of Geophysical Research: Oceans, 123*(1), 514–532. https://doi.org/10.1002/2017JC013363
+- Miron, P., Beron-Vera, F. J., Olascoaga, M. J., Sheinbaum, J., Pérez-Brunius, P., & Froyland, G. (2017). Lagrangian dynamical geography of the Gulf of Mexico. *Scientific Reports, 7*, Article 7021. https://doi.org/10.1038/s41598-017-07177-w
+- Russo, C. S., Lamont, T., & Krug, M. (2021). Spatial and temporal variability of the Agulhas Retroflection: Observations from a new objective detection method. *Remote Sensing of Environment, 253*, Article 112239. https://doi.org/10.1016/j.rse.2020.112239
