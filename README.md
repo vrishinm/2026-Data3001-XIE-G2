@@ -15,29 +15,37 @@ If a life raft, an oil slick or floating debris goes into the water off South Af
 **Primary question.** 
 How does the starting location in R decide whether material heads west into the Atlantic or turns back east into the Indian Ocean? We chose it because the retroflection splits the flow into two very different outcomes, and a transition matrix should be able to show where that split happens.
 
-- **RQ1.** For three well-supported starting cells, chosen on different sides of where the current turns back, where are drifters found after 7 and 28 days, and what share has left R to the west (towards the Atlantic) versus the east within 7, 28 and 364 days (1, 4 and 52 weekly steps)?
-- **RQ2.** Which parts of R feed which others, which are cut off from the rest, and where does R gather or lose material? In particular, which starting cells send most of their drifters out to the west, and which send them east?
-- **RQ3.** How well does the matrix predict held-out drifters, and how sensitive is it to the time step, drogue status and season?
+- **RQ1.**
+    For three well-supported starting cells, chosen on different sides of where the current turns back, where are drifters found after 7 and 28 days, and what proportion has left R to the west (towards the Atlantic) or the east within 7, 28 and 364 days (1, 4 and 52 weekly steps)?
+- **RQ2.**
+    Which parts of R feed into which others **(I dont get this part, needs elaborating)**, which are relatively isolated, and where does R gain or lose material? In particular, which starting cells send most of their drifters out to the west, and which send them east?
+- **RQ3.**
+    How well does the matrix predict held-out drifters, and how sensitive are the results to the time step, drogue status, and season?
 
-We kept the questions narrow on purpose. RQ1 is the concrete "drop something here" answer, RQ2 zooms out to the whole box, and RQ3 is there so we can say how much the first two should be trusted.
+We kept the questions narrow on purpose. RQ1 focuses on the effect an object's location in R has on its movement, RQ2 considers the region as a whole, and RQ3 assesses how much the results from the first two questions can be trusted.
 
 **Objectives.**
-1. Build 7-day pairs, keeping each drifter's identity, timestamps and positions outside R, so that leaving the box counts as an outcome rather than as missing data.
-2. Count usable pairs and distinct drifters for each starting cell, and merge poorly supported cells with a neighbour before trying anything more complicated.
-3. Separate real exits from records that simply stop. A drifter's first recorded exit ends the pair in an absorbing outside state, and we check the hourly records in between, since a drifter can leave and come back within the 7 days.
-4. Estimate $P_{ij}=\Pr(X_{t+7\,\text{days}} \in j \mid X_t \in i)$ on 2° cells, which are coarser than our 1° data summary, so each row rests on enough drifters.
-5. Get the 28- and 364-day answers by applying P repeatedly ($P^4$, $P^{52}$) instead of relying on the few tracks that stay in R for a whole year. This assumes the next week depends only on where a drifter is now, which we test in RQ3.
-6. Look at seasonal coverage before pooling all transitions into one matrix.
-7. Hold out whole drifters, not single records, since records from the same drifter are strongly linked.
-8. Save P and the code so that someone else can load the matrix and rerun it for a different region. Nothing in the code depends on the exact box.
+1. Build 7-day pairs while retaining each drifter's identity, timestamps, and positions outside R, so that leaving the box is treated as an outcome rather than as missing data.
+2. Count usable pairs and distinct drifters for each starting cell, and merge poorly supported cells with a neighbouring cell before applying more complex methods.
+3. Distinguish exits from records that simply stop. A drifter's first recorded exit ends the pair in an absorbing outside state. We check the hourly records between the starting point and day 7, since a drifter can leave R and come back within the 7 day period.
+4. Estimate $P_{ij}=\Pr(X_{t+7\,\text{days}} \in j \mid X_t \in i)$ on 2° cells, which are coarser than our 1° data summary, so each row is supported by enough drifters.
+5. Get the 28- and 364-day answers by applying P repeatedly ($P^4$, $P^{52}$) rather than relying on the small number of tracks that remain in R for a whole year. This assumes the next week's movement depends only on the drifter's current location, which we test in RQ3.
+6. Examine seasonal coverage before pooling all transitions into one matrix.
+7. Hold out complete drifter tracks rather than single records, since records from the same drifter are strongly linked.
+8. Save P and the code so that someone else can apply the matrix and code to a different region. Nothing in the code depends on the exact region.
 
-**What counts as success.** (a) Every row of P rests on at least 10 distinct drifters; (b) on held-out drifters, P's top three cells catch the true 7-day destination clearly more often than the "stays put" baseline; (c) started near 31°E, 32°S, our matrix gives an Atlantic share in the same range as McAdam and van Sebille (2018). If (c) fails, we would rather explain why than tune the matrix until it matches.
+**What counts as success.** 
+(a) Every row of P is supported by at least 10 distinct drifters; 
+(b) on held-out drifters, the three most likely cells from P contains the true 7-day destination clearly more often than the "stays put" baseline **(I dont get this part, needs elaborating)**; 
+(c) when starting near 31°E, 32°S, our matrix produces an Atlantic share in the same range as McAdam and van Sebille (2018). 
+
+If (c) fails, we would rather explain why than adjust the matrix until it matches.
 
 ## 2. Region and data
 
-**Region.** R = [10°E, 45°E] × [45°S, 20°S], with points on the boundary counted as inside. We kept this box after testing alternatives because it follows the current down the east coast of South Africa, through the retroflection, and out towards both oceans. The western edge at 10°E matters most for us. If the box stopped at the tip of Africa, drifters heading into the Atlantic would leave almost straight away, and we couldn't compare the two outcomes we care about.
+**Region.** R = [10°E, 45°E] × [45°S, 20°S], with points on the boundary counted as inside. We kept this box after testing alternatives because it follows the current down the east coast of South Africa, through the retroflection, and out towards both oceans. The western edge at 10°E is the most important part. If the box stopped at the tip of Africa, drifters heading into the Atlantic would leave almost immediately, making it difficult to compare the two outcomes we are interested in.
 
-We ran the same counting on four boxes (Table 1). Benguela has far fewer drifters, and when we looked at it per cell rather than in total, its 25th percentile is only 29 drifters per cell against 76 for Agulhas. The two tighter Agulhas boxes actually have slightly better support per cell, but the "source only" box cuts off the retroflection, and the tighter box loses the northern source region, which is where our upstream starting cell would sit. So we accepted some thinner edge cells in exchange for keeping the whole system in one box. Since changing a boundary also changes the question being studied, we preferred to fix the box by the question rather than by which box scores best.
+We ran the same counts on four boxes (Table 1). Benguela has far fewer drifters, and when we considered per cell rather than in total, its 25th percentile is only 29 drifters per cell compared to the 76 drifters for Agulhas. The two smaller Agulhas boxes actually has slightly better support per cell, but the "source only" box cuts off the retroflection, and the smaller box loses the northern source region, which is where our upstream starting cell would be located. Therefore, we accepted some thinner edge cells in exchange for keeping the whole system in one box. Since changing the boundary also changes the question being studied, we preferred to choose the region based on the research question rather than on which region had the best data coverage.
 
 **Table 1.** The same counts applied to every candidate box (2° cells).
 
@@ -50,7 +58,7 @@ We ran the same counting on four boxes (Table 1). Benguela has far fewer drifter
 
 **Data.** We use the NOAA Global Drifter Program hourly product v2.01.1 (Elipot et al., 2016; 2022), accessed through CloudDrift `gdp1h()` on 22 September 2026. Each drifter follows the water at 15 m through its drogue, and the hourly product gives a position, velocity and sea-surface temperature on a regular one-hour grid, each with an uncertainty. For a transition matrix we only need `lon`, `lat`, `time` and `rowsize` (to know which rows belong to which drifter), plus `drogue_lost_date` and `typedeath` per drifter.
 
-A few things we checked before trusting any count:
+A few things we checked before trusting any count: **(Proofread got to here 6/10/2026 - 3:30PM)**
 
 - **Pipeline check.** Our code reproduces the 452 drifters in the course's East Australian Current example and the 3,848,969 Agulhas records in its regional comparison, so our filtering matches the course's.
 - **Data audit.** No missing or out-of-range coordinates and no duplicate timestamps, but 0.04% of time steps are not exactly one hour. That is why we match pairs by elapsed time rather than assuming 168 rows means 7 days.
