@@ -42,7 +42,7 @@ We ran the same counting on four boxes (Table 1). Benguela has far fewer drifter
 | Box | Longitude | Latitude | Hourly records | Distinct drifters | Occupied cells | Cells with ≥10 drifters | Median drifters/cell (25th pct) |
 |---|---|---|---|---|---|---|---|
 | **Chosen R (Agulhas)** | 10°E–45°E | 45°S–20°S | 3,848,969 | 1,149 | 178 / 234 | 171 | 116 (76) |
-| Benguela (rejected) | 0°–20°E | 38°S–15°S | 2,538,266 | 706 | 97 / 120 | 84 | 118 (29) |
+| Benguela | 0°–20°E | 38°S–15°S | 2,538,266 | 706 | 97 / 120 | 84 | 118 (29) |
 | Tighter Agulhas | 10°E–40°E | 45°S–25°S | 3,020,671 | 1,051 | 125 / 150 | 123 | 137 (101) |
 | Source region only | 20°E–45°E | 40°S–20°S | 1,827,496 | 628 | 92 / 130 | 90 | 98 (70) |
 
@@ -172,7 +172,7 @@ We think this scope fits the remaining seven weeks because the slowest part, bui
 
 **Data**
 
-- Elipot, S., Sykulski, A., Lumpkin, R., Centurioni, L., & Pazos, M. (2022). *Hourly location, current velocity, and temperature collected from Global Drifter Program drifters world-wide* (Version 2.01.1) [Data set]. NOAA National Centers for Environmental Information. https://doi.org/10.25921/x46c-3620. Accessed 22 September 2026 via CloudDrift.
+- Elipot, S., Sykulski, A., Lumpkin, R., Centurioni, L., & Pazos, M. (2022). *Hourly location, current velocity, and temperature collected from Global Drifter Program drifters world-wide* (Version 2.01.1) [22/09/26]. NOAA National Centers for Environmental Information. https://doi.org/10.25921/x46c-3620. Accessed 22 September 2026 via CloudDrift.
 
 **Literature**
 
