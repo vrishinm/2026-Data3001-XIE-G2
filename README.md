@@ -9,9 +9,11 @@
 
 ## 1. Research questions and objectives
 
-**Aim.** If a life raft, an oil slick or floating debris goes into the water off South Africa, responders need a quick answer about where it is likely to drift. We want to build a transition matrix from past drifter tracks that gives this answer for any starting point in R, and that someone else can pick up and iterate forward.
+**Aim.** 
+If a life raft, an oil slick or floating debris goes into the water off South Africa, responders need a quick answer about where it is likely to drift. We want to build a transition matrix from past drifter tracks that gives this answer for any starting point in R, and that someone else can pick up and iterate forward.
 
-**Primary question.** How does the starting location in R decide whether material heads west into the Atlantic or turns back east into the Indian Ocean? We chose it because the retroflection splits the flow into two very different outcomes, and a transition matrix should be able to show where that split happens.
+**Primary question.** 
+How does the starting location in R decide whether material heads west into the Atlantic or turns back east into the Indian Ocean? We chose it because the retroflection splits the flow into two very different outcomes, and a transition matrix should be able to show where that split happens.
 
 - **RQ1.** For three well-supported starting cells, chosen on different sides of where the current turns back, where are drifters found after 7 and 28 days, and what share has left R to the west (towards the Atlantic) versus the east within 7, 28 and 364 days (1, 4 and 52 weekly steps)?
 - **RQ2.** Which parts of R feed which others, which are cut off from the rest, and where does R gather or lose material? In particular, which starting cells send most of their drifters out to the west, and which send them east?
