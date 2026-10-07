@@ -1,0 +1,153 @@
+{
+  "prepared_on": "2026-10-06",
+  "model_results": false,
+  "provenance": {
+    "notebook": "analysis/section2_lucy.ipynb",
+    "local_ref": "origin/lucy",
+    "source_commit": "4e3d1ef",
+    "notebook_sha256": "75967e241a0b6deab62a108e81c6f4febf821e37d43f357420d5e02309322e79",
+    "cache": "gdp_1deg_grids.npz",
+    "scope": "Offline cache re-counts and extraction of saved notebook outputs; no timed trajectory or model run."
+  },
+  "recomputed_cache": {
+    "agulhas_1deg": {
+      "box": [
+        10,
+        45,
+        -45,
+        -20
+      ],
+      "boundary_convention": "half-open",
+      "grid_degrees": 1,
+      "records": 3848967,
+      "drifters": 1149,
+      "total_cells": 875,
+      "occupied_cells": 649,
+      "cells_at_least_10_drifters": 614,
+      "median_drifters": 71.0,
+      "p25_drifters": 49.0,
+      "p75_drifters": 99.0
+    },
+    "agulhas_2deg": {
+      "box": [
+        10,
+        45,
+        -45,
+        -20
+      ],
+      "boundary_convention": "half-open",
+      "grid_degrees": 2,
+      "records": 3848967,
+      "drifters": 1149,
+      "total_cells": 234,
+      "occupied_cells": 178,
+      "cells_at_least_10_drifters": 171,
+      "median_drifters": 116.0,
+      "p25_drifters": 76.0,
+      "p75_drifters": 168.75
+    },
+    "benguela_proposal_box": {
+      "box": [
+        0,
+        20,
+        -38,
+        -15
+      ],
+      "boundary_convention": "half-open",
+      "grid_degrees": 1,
+      "records": 2538266,
+      "drifters": 706,
+      "total_cells": 460,
+      "occupied_cells": 362,
+      "cells_at_least_10_drifters": 309,
+      "median_drifters": 69.0,
+      "p25_drifters": 19.25,
+      "p75_drifters": 86.0
+    },
+    "eac_validation": {
+      "box": [
+        145,
+        165,
+        -45,
+        -15
+      ],
+      "boundary_convention": "half-open",
+      "grid_degrees": 1,
+      "records": 2078547,
+      "drifters": 452,
+      "total_cells": 600,
+      "occupied_cells": 486,
+      "cells_at_least_10_drifters": 455,
+      "median_drifters": 33.0,
+      "p25_drifters": 24.0,
+      "p75_drifters": 42.0
+    }
+  },
+  "saved_notebook": {
+    "inclusive_agulhas_records": 3848969,
+    "source_text": {
+      "11": "Benguela: (2538266, 706)\n",
+      "12": "<Figure size 800x600 with 2 Axes>\nOccupied cells: 649 of 875\nMedian drifters per cell: 71  (10th-90th: 24-138)\nCells with >= 10 drifters: 614  |  fewer than 10: 35\n",
+      "13": "Records in R run from 31 Mar 1995 to 31 Oct 2022\n\n<Figure size 800x320 with 1 Axes>\nYears with any drifter in R: 28 of 28\nMedian drifters per year: 65  (min 4 in 1997, max 128 in 2016)\n  1995-1999: median 7 drifters per year\n  2000-2009: median 62 drifters per year\n  2010-2022: median 83 drifters per year\n\nTable 2. Coverage by austral season (1° cells)\n      Season  Hourly records  Distinct drifters  Occupied 1° cells  Median drifters per cell  Cells with >= 10 drifters\nDJF (summer)          858391                676                634                        18                        533\nMAM (autumn)         1012587                704                639                        21                        543\nJJA (winter)         1047302                735                637                        21                        560\nSON (spring)          930689                714                640                        19                        554\n",
+      "14": "Drogue-related variables: ['DragAreaAboveDrogue', 'DragAreaOfDrogue', 'DrogueBallast', 'DrogueCenterDepth', 'DrogueDetectSensor', 'DrogueLength', 'DrogueType', 'drogue_lost_date', 'drogue_status']\ndrogue_lost_date attrs: {'long_name': 'Date and time of drogue loss'}\n\nDrifters entering R: 1149\n  drogue-loss date missing (NaT): 4\n  lost on or before deployment:   34\n  lost after the record ends:     0\n  days drogued after deployment: median 173, 25th-75th 79-360\n\nFive example drifters:\n             id     deploy drogue_lost        end\n          89770 2010-02-20  2010-04-13 2012-03-22\n300234063896840 2017-03-26  2017-06-16 2018-01-27\n          70812 2008-02-03  2008-02-23 2011-11-25\n         118513 2013-01-01  2013-09-08 2017-01-29\n300234064876500        NaT  2021-05-02 2022-02-24\n\nShare of records in R that are drogued (from drogue_lost_date): 33.3%\nShare of drifters in R with at least one drogued record in R:  49.4%\nShare from the per-record drogue_status flag:                  33.4%\nAgreement between the two methods:                             99.9%\n\nAll drifters: 649 occupied cells | median 71 (10th-90th 24-138) | >= 10 drifters: 614 | fewer than 10: 35\n\nDrogued only: 637 occupied cells | median 22 (10th-90th 7-45) | >= 10 drifters: 520 | fewer than 10: 117\nCells with >= 10 drifters overall but < 10 drogued drifters: 94\n\n<Figure size 800x600 with 2 Axes>",
+      "15": "Table 3. How the 1,149 drifters that enter R end\ntypedeath                Meaning    Treated as  Drifters  Record ends inside R\n        0            still alive      censored        61                    22\n        1            ran aground real endpoint       190                    70\n        2    picked up by vessel      censored        27                    12\n        3      stop transmitting      censored       857                   203\n        4 sporadic transmissions      censored         0                     0\n        5          bad batteries      censored         1                     0\n        6        inactive status      censored        13                     2\n                           Total                    1149                   309\n\nDrifters whose record ends outside R (they left R first): 840 (73.1%)\nRan aground inside R (real endpoints in R): 70\n'Stop transmitting' inside R: 203 (some may be unrecorded groundings)\n"
+    },
+    "seasonal_1deg_coverage": [
+      {
+        "season": "DJF",
+        "records": 858391,
+        "drifters": 676,
+        "occupied_1deg_cells": 634,
+        "median_drifters_per_1deg_cell": 18,
+        "cells_at_least_10_drifters": 533
+      },
+      {
+        "season": "MAM",
+        "records": 1012587,
+        "drifters": 704,
+        "occupied_1deg_cells": 639,
+        "median_drifters_per_1deg_cell": 21,
+        "cells_at_least_10_drifters": 543
+      },
+      {
+        "season": "JJA",
+        "records": 1047302,
+        "drifters": 735,
+        "occupied_1deg_cells": 637,
+        "median_drifters_per_1deg_cell": 21,
+        "cells_at_least_10_drifters": 560
+      },
+      {
+        "season": "SON",
+        "records": 930689,
+        "drifters": 714,
+        "occupied_1deg_cells": 640,
+        "median_drifters_per_1deg_cell": 19,
+        "cells_at_least_10_drifters": 554
+      }
+    ]
+  },
+  "figures": [
+    {
+      "file": "figures/coverage_1deg.png",
+      "notebook_cell": 12,
+      "sha256": "bd79040d61764b5b89e496598896a5b9dd7eadd36def8875e0ae76a7b51b08ef"
+    },
+    {
+      "file": "figures/drifters_per_year.png",
+      "notebook_cell": 13,
+      "sha256": "d79e233c977751bf5dc457697d32cd2f831b90dbab43ffe021ffe0eeefb66cd4"
+    },
+    {
+      "file": "figures/drogued_coverage_1deg.png",
+      "notebook_cell": 14,
+      "sha256": "84d3fe751640ab375c662bbe2a9df6eb17b34862c6e68fd3683ff9dc8da04f98"
+    }
+  ],
+  "interpretation": [
+    "Occupancy is not training transition support.",
+    "Seasonal drifter counts overlap between seasons.",
+    "Final position outside R is not a daily first-exit count.",
+    "The old JSON Benguela comparison uses a different box and is retained as historical evidence."
+  ]
+}

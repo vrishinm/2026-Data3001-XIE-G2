@@ -1,0 +1,17 @@
+{
+  "body_pages": 3,
+  "reference_pages": 1,
+  "page_size": "A4",
+  "source": "README.md",
+  "repository_guide_excluded": true,
+  "markdown_output": "PROPOSAL.md",
+  "readme_sha256": "789b3cb2ed0a522614634af5e24aaa46e254ce71de92f3cd6bbe3d72803ea4ab",
+  "proposal_source_sha256": "be84259f9e6f000deb1a1048d191b69be355f8c56421c652de086bd8ee209516",
+  "markdown_sha256": "9b5a7007dfb0c75255b8ec9edd50f69188048418468a86c374339430ac448384",
+  "pdf_sha256": "b217c94812c71f3ff49c8542942f79e4cced420c99682e6b466cdbd4bd65b647",
+  "named_team_allocation": "omitted from proposal at user request; TEAM_ALLOCATION.md retained separately",
+  "visual_review": "passed: all four rendered pages inspected; no clipping, overlap or missing glyphs; allocation removed and timeline retained on page 3",
+  "checked_on": "2026-10-07",
+  "content_checks": "standalone Markdown matches PDF source; allocation absent; six research sections, core data and timeline retained; local Markdown links valid",
+  "markdown_language_check": "passed: all six Markdown documents in English; no Chinese characters"
+}

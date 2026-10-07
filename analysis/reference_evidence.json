@@ -1,0 +1,1159 @@
+{
+  "checked_on": "2026-10-06",
+  "sources": [
+    "https://api.crossref.org/works/{doi}",
+    "https://api.datacite.org/dois/10.25921/x46c-3620",
+    "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC5856081/fullTextXML"
+  ],
+  "records": {
+    "nature09983": {
+      "title": [
+        "On the role of the Agulhas system in ocean circulation and climate"
+      ],
+      "author": [
+        {
+          "given": "Lisa M.",
+          "family": "Beal",
+          "sequence": "first",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Wilhelmus P. M.",
+          "family": "De Ruijter",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Arne",
+          "family": "Biastoch",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Rainer",
+          "family": "Zahn",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "name": "SCOR/WCRP/IAPSO Working Group 136",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Meghan",
+          "family": "Cronin",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Juliet",
+          "family": "Hermes",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Johann",
+          "family": "Lutjeharms",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Graham",
+          "family": "Quartly",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Tomoki",
+          "family": "Tozuka",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Sheekela",
+          "family": "Baker-Yeboah",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Thomas",
+          "family": "Bornman",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Paolo",
+          "family": "Cipollini",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Henk",
+          "family": "Dijkstra",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Ian",
+          "family": "Hall",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Wonsun",
+          "family": "Park",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Frank",
+          "family": "Peeters",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Pierrick",
+          "family": "Penven",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Herman",
+          "family": "Ridderinkhof",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Jens",
+          "family": "Zinke",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "DOI": "10.1038/nature09983",
+      "container-title": [
+        "Nature"
+      ],
+      "volume": "472",
+      "issue": "7344",
+      "page": "429-436",
+      "published": {
+        "date-parts": [
+          [
+            2011,
+            4,
+            27
+          ]
+        ]
+      },
+      "abstract": null
+    },
+    "2016JC011716": {
+      "title": [
+        "A global surface drifter data set at hourly resolution"
+      ],
+      "author": [
+        {
+          "given": "Shane",
+          "family": "Elipot",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "Rosenstiel School of Marine and Atmospheric Sciences University of Miami Miami Florida USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Rick",
+          "family": "Lumpkin",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "NOAA/Atlantic Oceanographic and Meteorological Laboratory Miami Florida USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Renellys C.",
+          "family": "Perez",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "NOAA/Atlantic Oceanographic and Meteorological Laboratory Miami Florida USA"
+            },
+            {
+              "name": "Cooperative Institute of Marine and Atmospheric Studies, University of Miami Miami Florida USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Jonathan M.",
+          "family": "Lilly",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Northwest Research Associates Redmond Washington USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Jeffrey J.",
+          "family": "Early",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Northwest Research Associates Redmond Washington USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Adam M.",
+          "family": "Sykulski",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Department of Statistical Science, University College London London UK"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "DOI": "10.1002/2016jc011716",
+      "container-title": [
+        "Journal of Geophysical Research: Oceans"
+      ],
+      "volume": "121",
+      "issue": "5",
+      "page": "2937-2966",
+      "published": {
+        "date-parts": [
+          [
+            2016,
+            5
+          ]
+        ]
+      },
+      "abstract": "<jats:title>Abstract</jats:title>\n                  <jats:p>\n                    The surface drifting buoys, or drifters, of the Global Drifter Program (GDP) are predominantly tracked by the Argos positioning system, providing drifter locations with\n                    <jats:italic>O</jats:italic>\n                    (100 m) errors at nonuniform temporal intervals, with an average interval of 1.2 h since January 2005. This data set is thus a rich and global source of information on high‐frequency and small‐scale oceanic processes, yet is still relatively understudied because of the challenges associated with its large size and sampling characteristics. A methodology is described to produce a new high‐resolution global data set since 2005, consisting of drifter locations and velocities estimated at hourly intervals, along with their respective errors. Locations and velocities are obtained by modeling locally in time trajectories as a first‐order polynomial with coefficients obtained by maximizing a likelihood function. This function is derived by modeling the Argos location errors with\n                    <jats:italic>t</jats:italic>\n                    location‐scale probability distribution functions. The methodology is motivated by analyzing 82 drifters tracked contemporaneously by Argos and by the Global Positioning System, where the latter is assumed to provide true locations. A global spectral analysis of the velocity variance from the new data set reveals a sharply defined ridge of energy closely following the inertial frequency as a function of latitude, distinct energy peaks near diurnal and semidiurnal frequencies, as well as higher‐frequency peaks located near tidal harmonics as well as near replicates of the inertial frequency. Compared to the spectra that can be obtained using the standard 6‐hourly GDP product, the new data set contains up to 100% more spectral energy at some latitudes.\n                  </jats:p>"
+    },
+    "2017JC013363": {
+      "title": [
+        "Surface Connectivity and Interocean Exchanges From Drifter‐Based Transition Matrices"
+      ],
+      "author": [
+        {
+          "ORCID": "https://orcid.org/0000-0003-0883-9014",
+          "authenticated-orcid": false,
+          "given": "Ronan",
+          "family": "McAdam",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "Grantham Institute‐Climate Change and the Environment Imperial College London London UK"
+            },
+            {
+              "name": "Department of Physics Imperial College London London UK"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Erik",
+          "family": "van Sebille",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Grantham Institute‐Climate Change and the Environment Imperial College London London UK"
+            },
+            {
+              "name": "Department of Physics Imperial College London London UK"
+            },
+            {
+              "name": "Institute for Marine and Atmospheric Research Utrecht Utrecht University Utrecht The Netherlands"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "DOI": "10.1002/2017jc013363",
+      "container-title": [
+        "Journal of Geophysical Research: Oceans"
+      ],
+      "volume": "123",
+      "issue": "1",
+      "page": "514-532",
+      "published": {
+        "date-parts": [
+          [
+            2018,
+            1
+          ]
+        ]
+      },
+      "abstract": "<jats:title>Abstract</jats:title><jats:p>Global surface transport in the ocean can be represented by using the observed trajectories of drifters to calculate probability distribution functions. The oceanographic applications of the Markov Chain approach to modeling include tracking of floating debris and water masses, globally and on yearly‐to‐centennial time scales. Here we analyze the error inherent with mapping trajectories onto a grid and the consequences for ocean transport modeling and detection of accumulation structures. A sensitivity analysis of Markov Chain parameters is performed in an idealized Stommel gyre and western boundary current as well as with observed ocean drifters, complementing previous studies on widespread floating debris accumulation. Focusing on two key areas of interocean exchange—the Agulhas system and the North Atlantic intergyre transport barrier—we assess the capacity of the Markov Chain methodology to detect surface connectivity and dynamic transport barriers. Finally, we extend the methodology's functionality to separate the geostrophic and nongeostrophic contributions to interocean exchange in these key regions.</jats:p>"
+    },
+    "jgrc.20210": {
+      "title": [
+        "Global ocean surface velocities from drifters: Mean, variance, El Niño–Southern Oscillation response, and seasonal cycle"
+      ],
+      "author": [
+        {
+          "given": "Rick",
+          "family": "Lumpkin",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "NOAA/Atlantic Oceanographic and Meteorological Laboratory Miami Florida USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Gregory C.",
+          "family": "Johnson",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "NOAA/Pacific Marine Environmental Laboratory Seattle Washington USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "DOI": "10.1002/jgrc.20210",
+      "container-title": [
+        "Journal of Geophysical Research: Oceans"
+      ],
+      "volume": "118",
+      "issue": "6",
+      "page": "2992-3006",
+      "published": {
+        "date-parts": [
+          [
+            2013,
+            6
+          ]
+        ]
+      },
+      "abstract": "<jats:p>Global near‐surface currents are calculated from satellite‐tracked drogued drifter velocities on a 0.5° × 0.5° latitude‐longitude grid using a new methodology. Data used at each grid point lie within a centered bin of set area with a shape defined by the variance ellipse of current fluctuations within that bin. The time‐mean current, its annual harmonic, semiannual harmonic, correlation with the Southern Oscillation Index (SOI), spatial gradients, and residuals are estimated along with formal error bars for each component. The time‐mean field resolves the major surface current systems of the world. The magnitude of the variance reveals enhanced eddy kinetic energy in the western boundary current systems, in equatorial regions, and along the Antarctic Circumpolar Current, as well as three large “eddy deserts,” two in the Pacific and one in the Atlantic. The SOI component is largest in the western and central tropical Pacific, but can also be seen in the Indian Ocean. Seasonal variations reveal details such as the gyre‐scale shifts in the convergence centers of the subtropical gyres, and the seasonal evolution of tropical currents and eddies in the western tropical Pacific Ocean. The results of this study are available as a monthly climatology.</jats:p>"
+    },
+    "fmars.2019.00419": {
+      "title": [
+        "Global in situ Observations of Essential Climate and Ocean Variables at the Air–Sea Interface"
+      ],
+      "author": [
+        {
+          "given": "Luca R.",
+          "family": "Centurioni",
+          "sequence": "first",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Jon",
+          "family": "Turton",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Rick",
+          "family": "Lumpkin",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Lancelot",
+          "family": "Braasch",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Gary",
+          "family": "Brassington",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Yi",
+          "family": "Chao",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Etienne",
+          "family": "Charpentier",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Zhaohui",
+          "family": "Chen",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Gary",
+          "family": "Corlett",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Kathleen",
+          "family": "Dohan",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Craig",
+          "family": "Donlon",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Champika",
+          "family": "Gallage",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Verena",
+          "family": "Hormann",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Alexander",
+          "family": "Ignatov",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Bruce",
+          "family": "Ingleby",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Robert",
+          "family": "Jensen",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Boris A.",
+          "family": "Kelly-Gerreyn",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Inga M.",
+          "family": "Koszalka",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Xiaopei",
+          "family": "Lin",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Eric",
+          "family": "Lindstrom",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Nikolai",
+          "family": "Maximenko",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Christopher J.",
+          "family": "Merchant",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Peter",
+          "family": "Minnett",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Anne",
+          "family": "O’Carroll",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Theresa",
+          "family": "Paluszkiewicz",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Paul",
+          "family": "Poli",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Pierre-Marie",
+          "family": "Poulain",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Gilles",
+          "family": "Reverdin",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Xiujun",
+          "family": "Sun",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Val",
+          "family": "Swail",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Sidney",
+          "family": "Thurston",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Lixin",
+          "family": "Wu",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Lisan",
+          "family": "Yu",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Bin",
+          "family": "Wang",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Dongxiao",
+          "family": "Zhang",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "DOI": "10.3389/fmars.2019.00419",
+      "container-title": [
+        "Frontiers in Marine Science"
+      ],
+      "volume": "6",
+      "issue": null,
+      "page": null,
+      "published": {
+        "date-parts": [
+          [
+            2019,
+            8,
+            30
+          ]
+        ]
+      },
+      "abstract": null
+    },
+    "j.rse.2020.112239": {
+      "title": [
+        "Spatial and temporal variability of the Agulhas Retroflection: Observations from a new objective detection method"
+      ],
+      "author": [
+        {
+          "given": "Cristina Serena",
+          "family": "Russo",
+          "sequence": "first",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Tarron",
+          "family": "Lamont",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Marjolaine",
+          "family": "Krug",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "DOI": "10.1016/j.rse.2020.112239",
+      "container-title": [
+        "Remote Sensing of Environment"
+      ],
+      "volume": "253",
+      "issue": null,
+      "page": "112239",
+      "published": {
+        "date-parts": [
+          [
+            2021,
+            2
+          ]
+        ]
+      },
+      "abstract": null
+    },
+    "dataset": {
+      "doi": "10.25921/x46c-3620",
+      "prefix": "10.25921",
+      "suffix": "x46c-3620",
+      "identifiers": [],
+      "alternateIdentifiers": [],
+      "creators": [
+        {
+          "name": "Elipot, Shane",
+          "affiliation": [
+            "University of Miami Rosenstiel School of Marine and Atmospheric Science"
+          ],
+          "nameIdentifiers": [
+            {
+              "schemeUri": "https://orcid.org",
+              "nameIdentifier": "https://orcid.org/0000-0001-6051-5426",
+              "nameIdentifierScheme": "ORCID"
+            }
+          ]
+        },
+        {
+          "name": "Sykulski, Adam",
+          "affiliation": [
+            "Imperial College London"
+          ],
+          "nameIdentifiers": []
+        },
+        {
+          "name": "Lumpkin, Rick",
+          "affiliation": [
+            "NOAA Atlantic Oceanographic and Meteorological Laboratory"
+          ],
+          "nameIdentifiers": [
+            {
+              "schemeUri": "https://orcid.org",
+              "nameIdentifier": "https://orcid.org/0000-0002-6690-1704",
+              "nameIdentifierScheme": "ORCID"
+            }
+          ]
+        },
+        {
+          "name": "Centurioni, Luca",
+          "affiliation": [
+            "Scripps Institution of Oceanography"
+          ],
+          "nameIdentifiers": []
+        },
+        {
+          "name": "Pazos, Mayra",
+          "affiliation": [
+            "NOAA Atlantic Oceanographic and Meteorological Laboratory"
+          ],
+          "nameIdentifiers": []
+        }
+      ],
+      "titles": [
+        {
+          "title": "Hourly location, current velocity, and temperature collected from Global Drifter Program drifters world-wide"
+        }
+      ],
+      "publisher": "NOAA National Centers for Environmental Information",
+      "container": {},
+      "publicationYear": 2022,
+      "subjects": [],
+      "contributors": [],
+      "dates": [],
+      "language": null,
+      "types": {
+        "ris": "DATA",
+        "bibtex": "misc",
+        "citeproc": "dataset",
+        "schemaOrg": "Dataset",
+        "resourceType": "Dataset",
+        "resourceTypeGeneral": "Dataset"
+      },
+      "relatedIdentifiers": [],
+      "relatedItems": [],
+      "sizes": [],
+      "formats": [],
+      "version": null,
+      "rightsList": [],
+      "descriptions": [
+        {
+          "description": "This dataset includes sea surface temperature and current data collected by satellite-tracked surface drifting buoys (\"drifters\") for the NOAA Global Drifter Program. The Drifter Data Assembly Center (DAC) at Atlantic Oceanographic and Meteorological Laboratory (AOML) has applied quality control procedures to edit these data (position and temperature) and interpolated them to 1-hour intervals using an optimum interpolation procedure. The data include positions (latitude and longitude), sea surface temperatures, and velocities (eastward, northward) with accompanying error estimates. Metadata include identification numbers, experiment number, start location and time, end location and time, drogue loss date, death code, manufacturer, and drifter type.",
+          "descriptionType": "Abstract"
+        }
+      ],
+      "geoLocations": [
+        {
+          "geoLocationBox": {
+            "eastBoundLongitude": 180,
+            "northBoundLatitude": 90,
+            "southBoundLatitude": -78.3072,
+            "westBoundLongitude": -180
+          }
+        }
+      ],
+      "fundingReferences": [],
+      "xml": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHJlc291cmNlIHhtbG5zOnhzaT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEtaW5zdGFuY2UiIHhtbG5zPSJodHRwOi8vZGF0YWNpdGUub3JnL3NjaGVtYS9rZXJuZWwtNCIgeHNpOnNjaGVtYUxvY2F0aW9uPSJodHRwOi8vZGF0YWNpdGUub3JnL3NjaGVtYS9rZXJuZWwtNCBodHRwczovL3NjaGVtYS5kYXRhY2l0ZS5vcmcvbWV0YS9rZXJuZWwtNC9tZXRhZGF0YS54c2QiPgogIDxpZGVudGlmaWVyIGlkZW50aWZpZXJUeXBlPSJET0kiPjEwLjI1OTIxL1g0NkMtMzYyMDwvaWRlbnRpZmllcj4KICA8Y3JlYXRvcnM+CiAgICA8Y3JlYXRvcj4KICAgICAgPGNyZWF0b3JOYW1lPkVsaXBvdCwgU2hhbmU8L2NyZWF0b3JOYW1lPgogICAgICA8bmFtZUlkZW50aWZpZXIgbmFtZUlkZW50aWZpZXJTY2hlbWU9Ik9SQ0lEIiBzY2hlbWVVUkk9Imh0dHBzOi8vb3JjaWQub3JnLyI+MDAwMC0wMDAxLTYwNTEtNTQyNjwvbmFtZUlkZW50aWZpZXI+CiAgICAgIDxhZmZpbGlhdGlvbiBhZmZpbGlhdGlvbklkZW50aWZpZXJTY2hlbWU9IlJPUiIgc2NoZW1lVVJJPSJodHRwczovL3Jvci5vcmcvIiBhZmZpbGlhdGlvbklkZW50aWZpZXI9Imh0dHBzOi8vcm9yLm9yZy8wMmRnanl5OTIiPlVuaXZlcnNpdHkgb2YgTWlhbWkgUm9zZW5zdGllbCBTY2hvb2wgb2YgTWFyaW5lIGFuZCBBdG1vc3BoZXJpYyBTY2llbmNlPC9hZmZpbGlhdGlvbj4KICAgIDwvY3JlYXRvcj4KICAgIDxjcmVhdG9yPgogICAgICA8Y3JlYXRvck5hbWU+U3lrdWxza2ksIEFkYW08L2NyZWF0b3JOYW1lPgogICAgICA8YWZmaWxpYXRpb24gYWZmaWxpYXRpb25JZGVudGlmaWVyU2NoZW1lPSJST1IiIHNjaGVtZVVSST0iaHR0cHM6Ly9yb3Iub3JnLyIgYWZmaWxpYXRpb25JZGVudGlmaWVyPSJodHRwczovL3Jvci5vcmcvMDQxa213ZTEwIj5JbXBlcmlhbCBDb2xsZWdlIExvbmRvbjwvYWZmaWxpYXRpb24+CiAgICA8L2NyZWF0b3I+CiAgICA8Y3JlYXRvcj4KICAgICAgPGNyZWF0b3JOYW1lPkx1bXBraW4sIFJpY2s8L2NyZWF0b3JOYW1lPgogICAgICA8bmFtZUlkZW50aWZpZXIgbmFtZUlkZW50aWZpZXJTY2hlbWU9Ik9SQ0lEIiBzY2hlbWVVUkk9Imh0dHBzOi8vb3JjaWQub3JnLyI+MDAwMC0wMDAyLTY2OTAtMTcwNDwvbmFtZUlkZW50aWZpZXI+CiAgICAgIDxhZmZpbGlhdGlvbiBhZmZpbGlhdGlvbklkZW50aWZpZXJTY2hlbWU9IlJPUiIgc2NoZW1lVVJJPSJodHRwczovL3Jvci5vcmcvIiBhZmZpbGlhdGlvbklkZW50aWZpZXI9Imh0dHBzOi8vcm9yLm9yZy8wNDJyOXhiMTciPk5PQUEgQXRsYW50aWMgT2NlYW5vZ3JhcGhpYyBhbmQgTWV0ZW9yb2xvZ2ljYWwgTGFib3JhdG9yeTwvYWZmaWxpYXRpb24+CiAgICA8L2NyZWF0b3I+CiAgICA8Y3JlYXRvcj4KICAgICAgPGNyZWF0b3JOYW1lPkNlbnR1cmlvbmksIEx1Y2E8L2NyZWF0b3JOYW1lPgogICAgICA8YWZmaWxpYXRpb24gYWZmaWxpYXRpb25JZGVudGlmaWVyU2NoZW1lPSJST1IiIHNjaGVtZVVSST0iaHR0cHM6Ly9yb3Iub3JnLyIgYWZmaWxpYXRpb25JZGVudGlmaWVyPSJodHRwczovL3Jvci5vcmcvMDR2N2h2cTMxIj5TY3JpcHBzIEluc3RpdHV0aW9uIG9mIE9jZWFub2dyYXBoeTwvYWZmaWxpYXRpb24+CiAgICA8L2NyZWF0b3I+CiAgICA8Y3JlYXRvcj4KICAgICAgPGNyZWF0b3JOYW1lPlBhem9zLCBNYXlyYTwvY3JlYXRvck5hbWU+CiAgICAgIDxhZmZpbGlhdGlvbiBhZmZpbGlhdGlvbklkZW50aWZpZXJTY2hlbWU9IlJPUiIgc2NoZW1lVVJJPSJodHRwczovL3Jvci5vcmcvIiBhZmZpbGlhdGlvbklkZW50aWZpZXI9Imh0dHBzOi8vcm9yLm9yZy8wNDJyOXhiMTciPk5PQUEgQXRsYW50aWMgT2NlYW5vZ3JhcGhpYyBhbmQgTWV0ZW9yb2xvZ2ljYWwgTGFib3JhdG9yeTwvYWZmaWxpYXRpb24+CiAgICA8L2NyZWF0b3I+CiAgPC9jcmVhdG9ycz4KICA8dGl0bGVzPgogICAgPHRpdGxlPkhvdXJseSBsb2NhdGlvbiwgY3VycmVudCB2ZWxvY2l0eSwgYW5kIHRlbXBlcmF0dXJlIGNvbGxlY3RlZCBmcm9tIEdsb2JhbCBEcmlmdGVyIFByb2dyYW0gZHJpZnRlcnMgd29ybGQtd2lkZTwvdGl0bGU+CiAgPC90aXRsZXM+CiAgPHB1Ymxpc2hlciB4bWw6bGFuZz0iZW4iIHB1Ymxpc2hlcklkZW50aWZpZXI9Imh0dHBzOi8vcm9yLm9yZy8wNHIwd3JwNTkiIHB1Ymxpc2hlcklkZW50aWZpZXJTY2hlbWU9IlJPUiIgc2NoZW1lVVJJPSJodHRwczovL3Jvci5vcmcvIj5OT0FBIE5hdGlvbmFsIENlbnRlcnMgZm9yIEVudmlyb25tZW50YWwgSW5mb3JtYXRpb248L3B1Ymxpc2hlcj4KICA8cHVibGljYXRpb25ZZWFyPjIwMjI8L3B1YmxpY2F0aW9uWWVhcj4KICA8cmVzb3VyY2VUeXBlIHJlc291cmNlVHlwZUdlbmVyYWw9IkRhdGFzZXQiPkRhdGFzZXQ8L3Jlc291cmNlVHlwZT4KICA8ZGVzY3JpcHRpb25zPgogICAgPGRlc2NyaXB0aW9uIGRlc2NyaXB0aW9uVHlwZT0iQWJzdHJhY3QiPlRoaXMgZGF0YXNldCBpbmNsdWRlcyBzZWEgc3VyZmFjZSB0ZW1wZXJhdHVyZSBhbmQgY3VycmVudCBkYXRhIGNvbGxlY3RlZCBieSBzYXRlbGxpdGUtdHJhY2tlZCBzdXJmYWNlIGRyaWZ0aW5nIGJ1b3lzICgiZHJpZnRlcnMiKSBmb3IgdGhlIE5PQUEgR2xvYmFsIERyaWZ0ZXIgUHJvZ3JhbS4gVGhlIERyaWZ0ZXIgRGF0YSBBc3NlbWJseSBDZW50ZXIgKERBQykgYXQgQXRsYW50aWMgT2NlYW5vZ3JhcGhpYyBhbmQgTWV0ZW9yb2xvZ2ljYWwgTGFib3JhdG9yeSAoQU9NTCkgaGFzIGFwcGxpZWQgcXVhbGl0eSBjb250cm9sIHByb2NlZHVyZXMgdG8gZWRpdCB0aGVzZSBkYXRhIChwb3NpdGlvbiBhbmQgdGVtcGVyYXR1cmUpIGFuZCBpbnRlcnBvbGF0ZWQgdGhlbSB0byAxLWhvdXIgaW50ZXJ2YWxzIHVzaW5nIGFuIG9wdGltdW0gaW50ZXJwb2xhdGlvbiBwcm9jZWR1cmUuIFRoZSBkYXRhIGluY2x1ZGUgcG9zaXRpb25zIChsYXRpdHVkZSBhbmQgbG9uZ2l0dWRlKSwgc2VhIHN1cmZhY2UgdGVtcGVyYXR1cmVzLCBhbmQgdmVsb2NpdGllcyAoZWFzdHdhcmQsIG5vcnRod2FyZCkgd2l0aCBhY2NvbXBhbnlpbmcgZXJyb3IgZXN0aW1hdGVzLiBNZXRhZGF0YSBpbmNsdWRlIGlkZW50aWZpY2F0aW9uIG51bWJlcnMsIGV4cGVyaW1lbnQgbnVtYmVyLCBzdGFydCBsb2NhdGlvbiBhbmQgdGltZSwgZW5kIGxvY2F0aW9uIGFuZCB0aW1lLCBkcm9ndWUgbG9zcyBkYXRlLCBkZWF0aCBjb2RlLCBtYW51ZmFjdHVyZXIsIGFuZCBkcmlmdGVyIHR5cGUuPC9kZXNjcmlwdGlvbj4KICA8L2Rlc2NyaXB0aW9ucz4KICA8Z2VvTG9jYXRpb25zPgogICAgPGdlb0xvY2F0aW9uPgogICAgICA8Z2VvTG9jYXRpb25Cb3g+CiAgICAgICAgPHdlc3RCb3VuZExvbmdpdHVkZT4tMTgwPC93ZXN0Qm91bmRMb25naXR1ZGU+CiAgICAgICAgPGVhc3RCb3VuZExvbmdpdHVkZT4xODA8L2Vhc3RCb3VuZExvbmdpdHVkZT4KICAgICAgICA8c291dGhCb3VuZExhdGl0dWRlPi03OC4zMDcyPC9zb3V0aEJvdW5kTGF0aXR1ZGU+CiAgICAgICAgPG5vcnRoQm91bmRMYXRpdHVkZT45MDwvbm9ydGhCb3VuZExhdGl0dWRlPgogICAgICA8L2dlb0xvY2F0aW9uQm94PgogICAgPC9nZW9Mb2NhdGlvbj4KICA8L2dlb0xvY2F0aW9ucz4KPC9yZXNvdXJjZT4=",
+      "url": "https://www.ncei.noaa.gov/archive/accession/AOML-GDP-1hr",
+      "contentUrl": null,
+      "metadataVersion": 12,
+      "schemaVersion": "http://datacite.org/schema/kernel-4",
+      "source": "mds",
+      "isActive": true,
+      "state": "findable",
+      "reason": null,
+      "viewCount": 0,
+      "viewsOverTime": [],
+      "downloadCount": 0,
+      "downloadsOverTime": [],
+      "referenceCount": 2,
+      "citationCount": 10,
+      "citationsOverTime": [
+        {
+          "year": "2022",
+          "total": 1
+        },
+        {
+          "year": "2024",
+          "total": 1
+        },
+        {
+          "year": "2025",
+          "total": 6
+        },
+        {
+          "year": "2026",
+          "total": 2
+        }
+      ],
+      "partCount": 0,
+      "partOfCount": 0,
+      "versionCount": 0,
+      "versionOfCount": 0,
+      "created": "2022-04-11T19:02:05.000Z",
+      "registered": "2022-04-11T19:02:05.000Z",
+      "published": "2022",
+      "updated": "2026-07-27T12:36:10.000Z"
+    }
+  }
+}
