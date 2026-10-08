@@ -36,11 +36,9 @@ We kept the questions narrow on purpose. RQ1 focuses on the effect an object's l
 8. Save P and the code so that someone else can apply the matrix and code to a different region. Nothing in the code depends on the exact region.
 
 **What counts as success.** 
-(a) Every row of P is supported by at least 10 distinct drifters; 
-(b) on held-out drifters, the three most likely cells from P contains the true 7-day destination clearly more often than the "stays put" baseline; 
-(c) when starting near 31°E, 32°S, our matrix produces an Atlantic share in the same range as McAdam and van Sebille (2018). 
+(a) Every non-absorbing row of the transition matrix is supported by at least 10 distinct drifters contributing valid seven-day transitions, ensuring sufficient data coverage for estimating transport probabilities.
 
-If (c) fails, we would rather explain why than adjust the matrix until it matches.
+(b) On held-out test drifters, the transition matrix achieves a lower multiclass Brier score than simple baseline models, including a "stays put" prediction and a model based on overall destination frequencies. We will also report the top-three destination hit rate as a supplementary measure of predictive performance.
 
 ## 2. Region and data
 
@@ -157,7 +155,9 @@ Our preliminary analysis, conducted using `Proposal_code.ipynb`, indicates that 
 | 6 | inactive status | censored | 13 | 2 |
 | | **Total** | | **1,149** | **309** |
 
-**First look at the 7-day pairs.** Of the 154,139 seven-day pairs, 92.7% remain within R at the end of the seven-day period. Among the 11,246 pairs that record an exit, 32.0% leave through the western boundary, 47.5% through the eastern boundary, 15.9% through the southern boundary and 4.7% through the northern boundary. Thus, even over a one-week period, eastern exits are more common than western exits, suggesting stronger transport towards the Indian Ocean than towards the Atlantic. This is broadly consistent with the expectation that much of the Agulhas Current retroflects rather than continuing westward. However, we do not interpret the 32.0% western-exit proportion as a direct measure of Agulhas leakage. These percentages are pooled across all starting cells, and some western exits may come from drifters that were already within the Benguela Current system along the western side of R. Examining exit probabilities conditional on the starting cell will therefore be important for distinguishing transport pathways within the region, which is the focus of our primary research question.
+**First look at the 7-day pairs.** Our preliminary analysis identified 154,139 usable seven-day pairs, of which 92.7% recorded no exit from R during the seven-day interval. The remaining 11,246 pairs recorded a first exit, with 32.0% exiting through the western boundary, 47.5% through the eastern boundary, 15.9% through the southern boundary and 4.7% through the northern boundary. These results suggest that eastern exits are more common than western exits over a seven-day period, consistent with the general eastward turning of the Agulhas Current during retroflection.
+
+However, these percentages describe the distribution of first exits across all starting cells and should not be interpreted as direct estimates of Agulhas leakage. Some western exits may originate from drifters already travelling within the Benguela Current system. Our next stage will therefore estimate exit probabilities for individual starting cells, allowing us to investigate how starting location influences westward and eastward transport.
 
 ## 7. Timeline and Plan
 
