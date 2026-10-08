@@ -3,6 +3,7 @@
 **DATA3001 Term 3 2026 · Group 2 · Project proposal**
 
 **Project.** "Where things end up" (Project 3.2.2): a surface-transport operator for the Agulhas Current region.
+
 **Code.** `Proposal_code.ipynb` reproduces every number and figure in this proposal from the raw data, top to bottom.
 
 ---
