@@ -158,34 +158,44 @@ Our preliminary analysis, conducted using `Proposal_code.ipynb`, indicates that 
 
 **First look at the 7-day pairs.** Of 154,139 pairs, 92.7% stay inside R after 7 days. Of the 11,246 that leave, 32.0% leave west, 47.5% east, 15.9% south and 4.7% north. So even at one week, more material leaves towards the Indian Ocean than the Atlantic, which fits the idea that most of the current turns back. We are careful not to read the 32% as "Agulhas leakage" yet. It is pooled over every starting cell, and some of the western exits are probably drifters already in the Benguela flow off the west coast. Separating those by starting cell is exactly what the primary question is for.
 
-## 7. Timeline and plan
+## 7. Timeline and Plan
 
-Week 1 started on 14 September. Weeks 1–3 are done: region chosen, data loaded, audit and coverage checks finished, and the 7-day pairs built. We planned the remaining weeks around the course assessments, since each one is a natural checkpoint for a part of the project.
+**Progress and approach.** Our project began in Week 1 (14 September) with selecting a suitable region and assessing whether the available drifter data could support our research questions. We compared four candidate regions using observation counts, spatial coverage and the number of distinct drifters per grid cell. We selected the Agulhas region because it provided strong data coverage while capturing both the Agulhas Current and its retroflection, allowing us to investigate westward and eastward transport.
 
-| Week (starting) | Task | Output / assessment |
+During Weeks 2–3, we accessed the hourly GDP dataset through CloudDrift and verified our filtering against the course's East Australian Current example. We then conducted data quality checks, examined coverage across different years and seasons, and investigated drogue status and how drifter records end. These analyses helped us identify potential sampling limitations and informed our decision to use 2° cells for the transition matrix.
+
+We also developed a preliminary method for constructing seven-day origin-destination pairs, using daily starting observations and tracking drifters beyond the regional boundaries to identify first exits. This produced 154,139 preliminary usable pairs and confirmed the feasibility of constructing a transition matrix. Following lecturer feedback, we will refine the handling of incomplete observations, grounding events and the first-exit rule before estimating the final matrix.
+
+**Implementation timeline.** The remaining work is organised around the course assessments, with each stage producing a result that contributes directly to the final transport model.
+
+| Week | Planned activities | Deliverables |
 |---|---|---|
-| 1–3 (14 Sep) | Region choice, data access, audit, coverage, 7-day pairs | Done: Tables 1–3, Figures 1–3, `pairs7.csv` |
-| 4 (5 Oct) | Proposal | **Proposal/README**, Thu 8 Oct |
-| 5 (12 Oct) | Add grounded state; merge the 6 thin cells; build the first P; 80/20 split by drifter | **Poster session**, Thu 15 Oct (in class) |
-| 6 (19 Oct) | RQ1: three starting cells at 7, 28, 364 days; sanity check at 31°E, 32°S | **Peer review of posters**, Thu 22 Oct |
-| 7 (26 Oct) | RQ2: connectivity, where R gathers and loses material, west/east map by starting cell | RQ2 maps |
-| 8 (2 Nov) | RQ3: top-3 hit rate vs "stays put"; $P^4$ vs direct 28-day pairs; drogued-only, 3-day and seasonal versions | Validation table and sensitivity figures |
-| 9 (9 Nov) | Package P with a loader function; rerun on a second box to check nothing depends on R; plan slides and report outline | Reusable product |
-| 10 (16 Nov) | Rehearse and present | **Group presentation**, 12 + 3 min, in class |
-| 11 (23 Nov) | Write up, using feedback from the presentation | **Modelling report** (15 pages), Thu 26 Nov |
+| **1–3 (14 Sep)** | Select and justify the region, access and verify the dataset, conduct data audits and coverage analysis, and construct preliminary seven-day pairs. | Completed: Tables 1–3, Figures 1–3 and `pairs7.csv`. |
+| **4 (5 Oct)** | Finalise research questions, proposed methodology, preliminary findings and implementation plan, incorporating lecturer feedback. | **Project Proposal/README**, Thu 8 Oct. |
+| **5 (12 Oct)** | Refine the seven-day pairs to handle first exits, incomplete follow-up and grounding. Address poorly supported cells and construct the initial transition matrix using a drifter-level training split. Produce preliminary destination and exit probabilities for selected starting cells. | Initial matrix, probability results and **poster session**, Thu 15 Oct. |
+| **6 (19 Oct)** | Refine the three starting-cell analyses, examine seven-day transport patterns and develop 28-day projections. Incorporate feedback from the poster session. | RQ1 probability maps, exit summaries and **poster peer review**, Thu 22 Oct. |
+| **7 (26 Oct)** | Investigate connectivity between grid cells, regional redistribution and how westward and eastward exit probabilities vary by starting location. | RQ2 connectivity and regional transport maps. |
+| **8 (2 Nov)** | Evaluate predictive performance using separate training, validation and test drifters, the multiclass Brier score, top-three hit rate and baseline comparisons. Compare $P^4$ with directly observed 28-day outcomes and test sensitivity to time step, grid resolution, drogue status and season. | RQ3 validation results and sensitivity figures. |
+| **9 (9 Nov)** | Refine the model based on validation results, assess whether 364-day projections are reliable enough to report, and package the matrix and code for reuse with other regions. | Final transport model, reproducible code and report outline. |
+| **10 (16 Nov)** | Consolidate findings, prepare visualisations and rehearse the group presentation. | **Group presentation**, 12 + 3 minutes, in class. |
+| **11 (23 Nov)** | Finalise the methodology, findings, limitations and conclusions, incorporating feedback from the presentation. | **Final modelling report**, Thu 26 Nov. |
 
-The poster comes only a week after this proposal, so we don't expect RQ1 results by then. We plan to show the data checks and the first pooled west/east exit split, and use the discussion with our lecturer to settle the three starting cells before we commit to them in Week 6. Reviewing another group's poster in Week 6 is also a chance to see how other groups handle drifter support per cell, which is the part we are least sure about.
+**Evaluation and project management.** Our approach prioritises developing a reliable seven-day transition matrix before extending it to longer periods. We will separate drifters into training (60%), validation (20%) and testing (20%) sets, ensuring that observations from the same drifter do not appear across multiple sets. Model settings will be selected using validation data, while the test set will provide an independent assessment of performance. Longer-term projections will only be interpreted where supported by these checks.
 
-**Risks and fallbacks.** Our rule is to fix support problems by combining cells or changing the box or horizon before adding model complexity.
+We use GitHub to manage code and documentation, with Google Colab and VS Code supporting analysis and development. Our notebooks and saved outputs allow us to reproduce preliminary results and revisit earlier decisions. We will use feedback from the proposal, poster and peer-review sessions to refine the methodology before the final presentation and report.
 
-| Risk | What we would see | Fallback |
+**Risks and contingency plans.** We have identified several challenges that could affect the accuracy or feasibility of our analysis, along with practical alternatives.
+
+| Risk | Potential impact | Mitigation strategy |
 |---|---|---|
-| Some rows too thin, especially by season or drogued-only | Fewer than 10 drifters in a starting cell | Merge with a neighbour, or pool seasons into two halves of the year |
-| The one-week memory assumption fails | $P^4$ disagrees with direct 28-day pairs | Report 28-day results from direct pairs, and keep $P^{52}$ as a rough guide only |
-| Artificial dispersion from the grid | Answers shift a lot between 7-day and 3-day steps | Report the range across versions instead of one number |
-| Data download drops mid-transfer | CloudDrift / S3 errors in Colab | Already handled with retries in the loader; results saved to `gdp_out/` so we don't reload |
+| **Insufficient data in some grid cells** | Unreliable transition probabilities, particularly for seasonal or drogued-only analyses. | Check distinct drifters contributing valid transitions and merge poorly supported neighbouring cells. Pool seasonal categories if necessary. |
+| **Incomplete trajectories or uncertain grounding events** | Incorrect classification of seven-day outcomes. | Retain confirmed first exits, verify grounding within the observation window and exclude unresolved outcomes from complete-case transition estimates. |
+| **Limitations of the Markov assumption** | Iterating the weekly matrix may produce unreliable longer-term projections. | Compare $P^4$ with directly observed 28-day outcomes. Prioritise validated short-term results and treat $P^{52}$ as exploratory if necessary. |
+| **Artificial dispersion from grid resolution or time step** | Estimated transport probabilities may depend heavily on modelling choices. | Compare different grid sizes and time steps, and report the sensitivity of key findings. |
+| **Uneven spatial and temporal sampling** | Some regions or periods may be disproportionately represented. | Examine coverage by cell, year, season and drogue status, and acknowledge limitations where coverage is insufficient. |
+| **Data access or processing failures** | Delays in analysis and model development. | Use the existing retry mechanism for CloudDrift downloads and save intermediate results to avoid repeated processing. |
 
-We think this scope fits the remaining seven weeks because the slowest part, building clean pairs, is already done, and P is a counting step on top of it. That leaves most of the time for checking whether the matrix can be trusted, which is the part we expect to learn the most from.
+**Feasibility.** Our preliminary analysis has established that the Agulhas region contains sufficient observations for the proposed modelling approach and that seven-day transitions can be constructed from the available records. The main remaining challenge is therefore not data availability, but ensuring that the transition probabilities are correctly defined, statistically reliable and appropriately interpreted. By prioritising the initial matrix, evaluating its performance before extending the time horizon, and retaining simpler alternatives where necessary, we believe the project is achievable within the remaining teaching period.
 
 **Repository.** We will tidy the repo into a clearer layout: `src/` for data access, filtering and the matrix code, `results/` for P and the summary counts, `figures/` for maps, and an `environment.yml` and `data/README.md` recording package versions and the data release, so someone else can rerun everything.
 
