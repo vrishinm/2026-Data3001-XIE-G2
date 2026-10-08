@@ -17,8 +17,8 @@ How does the starting location in R decide whether material heads west into the 
 
 - **RQ1.**
     For three well-supported starting cells, chosen on different sides of where the current turns back, where are drifters found after 7 and 28 days, and what proportion has left R to the west (towards the Atlantic) or the east within 7, 28 and 364 days (1, 4 and 52 weekly steps)?
-- **RQ2.**
-    Which parts of R feed into which others **(I dont get this part, needs elaborating)**, which are relatively isolated, and where does R gain or lose material? In particular, which starting cells send most of their drifters out to the west, and which send them east?
+- **RQ2.** 
+      How are different areas within the R region connected by ocean currents, and which areas are more likely to accumulate or lose floating material? In particular, how does the starting location influence whether drifters exit the region through the western or eastern boundary?
 - **RQ3.**
     How well does the matrix predict held-out drifters, and how sensitive are the results to the time step, drogue status, and season?
 
