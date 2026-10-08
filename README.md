@@ -37,7 +37,7 @@ We kept the questions narrow on purpose. RQ1 focuses on the effect an object's l
 
 **What counts as success.** 
 (a) Every row of P is supported by at least 10 distinct drifters; 
-(b) on held-out drifters, the three most likely cells from P contains the true 7-day destination clearly more often than the "stays put" baseline **(I dont get this part, needs elaborating)**; 
+(b) on held-out drifters, the three most likely cells from P contains the true 7-day destination clearly more often than the "stays put" baseline; 
 (c) when starting near 31°E, 32°S, our matrix produces an Atlantic share in the same range as McAdam and van Sebille (2018). 
 
 If (c) fails, we would rather explain why than adjust the matrix until it matches.
@@ -46,7 +46,7 @@ If (c) fails, we would rather explain why than adjust the matrix until it matche
 
 **Region.** We chose Agulhas as our region (R = [10°E, 45°E] × [45°S, 20°S]), with points on the boundary counted as inside. We kept this region after testing alternatives because it follows the current down the east coast of South Africa and goes through a process called retroflection (where an ocean current bends back or reverses direction), and out towards both oceans. The western edge at 10°E is the most important part. If the region stopped at the tip of Africa, drifters heading into the Atlantic would leave almost immediately, making it difficult to compare the two outcomes we are interested in.
 
-We ran the same counts on four regions (Table 1). Benguela has far fewer drifters, and when we considered per cell rather than in total, its 25th percentile is only 29 drifters per cell compared to the 76 drifters per cell for Agulhas. The two smaller Agulhas boxes actually has slightly better support per cell, but the "source only" box cuts off the retroflection, and the smaller box loses the northern source region, which is where our upstream starting cell would be located. Therefore, we accepted some thinner edge cells in exchange for keeping the whole system in one box. Since changing the boundary also changes the question being studied, we preferred to choose the region based on the research question rather than on which region had the best data coverage. **(NEED CLARIFICATION ON THIS)**
+We ran the same counts on four regions (Table 1). Benguela has far fewer drifters, and when we considered per cell rather than in total, its 25th percentile is only 29 drifters per cell compared to the 76 drifters per cell for Agulhas. The two smaller Agulhas boxes actually has slightly better support per cell, but the "source only" box cuts off the retroflection, and the smaller box loses the northern source region, which is where our upstream starting cell would be located. Therefore, we accepted some thinner edge cells in exchange for keeping the whole system in one box. Since changing the boundary also changes the question being studied, we preferred to choose the region based on the research question rather than on which region had the best data coverage.
 
 **Table 1.** The same counts applied to every candidate box (2° cells).
 
