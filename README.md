@@ -204,7 +204,7 @@ We use GitHub to manage code and documentation, with Google Colab and VS Code su
 
 **Data**
 
-- Elipot, S., Sykulski, A., Lumpkin, R., Centurioni, L., & Pazos, M. (2022). *Hourly location, current velocity, and temperature collected from Global Drifter Program drifters world-wide* (Version 2.01.1) [22/09/26]. NOAA National Centers for Environmental Information. https://doi.org/10.25921/x46c-3620. Accessed 22 September 2026 via CloudDrift.
+- Elipot, S., Sykulski, A., Lumpkin, R., Centurioni, L., & Pazos, M. (2022). *Hourly location, current velocity, and temperature collected from Global Drifter Program drifters world-wide* (Version 2.01.1) [Data set]. NOAA National Centers for Environmental Information. https://doi.org/10.25921/x46c-3620. Accessed 22 September 2026 via CloudDrift.
 
 **Literature**
 
