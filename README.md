@@ -1,114 +1,215 @@
-# Where things end up: surface transport in the Agulhas region
+# Where things end up in the Agulhas: a drifter-based transport matrix
 
-DATA3001, Term 3 2026 | Project 3.2.2 | Group 2
+**DATA3001 Term 3 2026 · Group 2 · Project proposal**
+
+**Project.** "Where things end up" (Project 3.2.2): a surface-transport operator for the Agulhas Current region.
+
+**Code.** `Proposal_code.ipynb` reproduces every number and figure in this proposal from the raw data, top to bottom.
+
+---
 
 ## 1. Research questions and objectives
 
-**Aim.** How does the starting location in the Agulhas system change where floating material is likely to go? We will estimate a reusable surface-transport operator from historical drifter trajectories, comparing transport towards the western leakage and eastern return-current corridors.
+**Aim.** 
+If a life raft, an oil slick or floating debris goes into the water off South Africa, responders need a quick answer about where it is likely to drift. We want to build a transition matrix from past drifter tracks that gives this answer for any starting point in R, and that someone else can pick up and iterate forward.
 
-- **RQ1 - Destinations:** For three supported starting states representing the coastal current, retroflection and return current, what destination probabilities are predicted after **7, 28 and 364 days**?
-- **RQ2 - Connectivity:** Which parts of the region feed others, which are weakly connected, and where does a specified initial distribution concentrate or leave the region?
-- **RQ3 - Reliability:** How well does the operator predict held-out drifters relative to persistence, and how sensitive are conclusions to time step, drogue status and season?
+**Primary question.** 
+How does the starting location in R decide whether material heads west into the Atlantic or turns back east into the Indian Ocean? We chose it because the retroflection splits the flow into two very different outcomes, and a transition matrix should be able to show where that split happens.
 
-**Objectives and outputs.** Construct daily-origin, 7-day outcomes; estimate a 2-degree transition matrix; produce release and regional connectivity maps; evaluate whole held-out trajectories and sensitivity variants. Deliver a loadable matrix, state lookup, merge/support maps, exclusion counts, configuration, figures and a reproducible Python workflow that accepts another region. Completion requires non-negative probabilities, unit row sums, conserved propagated mass and evaluation denominators. The 28/364-day horizons approximate a month/year through four/52 weekly steps. Long-horizon results are extrapolations until directly validated.
+- **RQ1.**
+    For three well-supported starting cells across the Agulhas Current and its retroflection, where are drifters likely to be within the region after 7 and 28 days, and what proportion are expected to have exited through the western (Atlantic) or eastern (Indian Ocean) boundary? How might these exit probabilities develop over longer periods, including 364 days, if the model is sufficiently validated?
+- **RQ2.** 
+      How are different areas within the R region connected by ocean currents, and which areas are more likely to accumulate or lose floating material? In particular, how does the starting location influence whether drifters exit the region through the western or eastern boundary?
+- **RQ3.**
+    How well does the matrix predict held-out drifters, and how sensitive are the results to the time step, drogue status, and season?
 
-## 2. Data/region and data description
+We kept the questions narrow on purpose. RQ1 focuses on the effect an object's location in R has on its movement, RQ2 considers the region as a whole, and RQ3 assesses how much the results from the first two questions can be trusted.
 
-**Region.** R is **10-45 degrees E, 45-20 degrees S**. It includes the coastal Agulhas Current, retroflection and eastward Return Current, with space west of Africa to observe westward transport. The western edge at 10 degrees E avoids stopping all westbound tracks immediately at the tip of Africa. Agulhas offers both stronger sampling and a release-location question involving contrasting pathways; Benguela was considered as an alternative (Table 1).
+**Objectives.**
+1. Build 7-day pairs while retaining each drifter's identity, timestamps, and positions outside R, so that leaving the box is treated as an outcome rather than as missing data.
+2. Count usable pairs and distinct drifters for each starting cell, and merge poorly supported cells with a neighbouring cell before applying more complex methods.
+3. Distinguish exits from records that simply stop. A drifter's first recorded exit ends the pair in an absorbing outside state. We check the hourly records between the starting point and day 7, since a drifter can leave R and come back within the 7 day period.
+4. Estimate a seven-day transition matrix, $P_{ij} = \Pr(S_{t+7}=j \mid S_t=i)$, using 2° grid cells. Here, $S$ represents the drifter's location within the region until its first exit, after which it enters a permanent absorbing exit state (west, east, south or north). Therefore, the matrix estimates the probability of remaining within a particular cell without having previously exited, or of having first exited through a specified boundary within seven days, rather than simply recording the drifter's actual position at the end of the period.
+5. Get the 28- and 364-day answers by applying P repeatedly ($P^4$, $P^{52}$) rather than relying on the small number of tracks that remain in R for a whole year. This assumes the next week's movement depends only on the drifter's current location, which we test in RQ3.
+6. Examine seasonal coverage before pooling all transitions into one matrix.
+7. Hold out complete drifter tracks rather than single records, since records from the same drifter are strongly linked.
+8. Save P and the code so that someone else can apply the matrix and code to a different region. Nothing in the code depends on the exact region.
 
-**Data.** We use NOAA GDP **hourly v2.01.1**, accessed through CloudDrift on **22 September 2026** (Elipot et al., 2016; Elipot et al., 2022). The product covers 1987-2022 globally; records in R span **31 March 1995-31 October 2022**. Its hourly positions are estimates from irregular satellite fixes, so repeated observations from one buoy are dependent. Data are stored as contiguous ragged trajectories: `rowsize` links observations to drifter `id`. We require `time`, `lon`, `lat`, `drogue_status`, `drogue_lost_date`, `typedeath` and deployment/end metadata; velocity and temperature are not required for endpoint transport. Load in chunks, identify entering drifters and retain full tracks, including outside positions.
+**What counts as success.** 
+(a) Every non-absorbing row of the transition matrix is supported by at least 10 distinct drifters contributing valid seven-day transitions, ensuring sufficient data coverage for estimating transport probabilities.
 
-**Table 1.** Candidate regions, counted with the same half-open boundary convention.
+(b) On held-out test drifters, the transition matrix achieves a lower multiclass Brier score than simple baseline models, including a "stays put" prediction and a model based on overall destination frequencies. We will also report the top-three destination hit rate as a supplementary measure of predictive performance.
 
-| Region | Longitude | Latitude | Hourly records | Distinct drifters |
-|---|---|---|---:|---:|
-| Agulhas, selected | 10-45 E | 45-20 S | 3,848,967 | 1,149 |
-| Benguela, alternative | 0-20 E | 38-15 S | 2,538,266 | 706 |
+## 2. Region and data
 
-Spatial and temporal sampling adequacy are summarised in Section 6.
+**Region.** We chose Agulhas as our region (R = [10°E, 45°E] × [45°S, 20°S]), with points on the boundary counted as inside. We kept this region after testing alternatives because it follows the current down the east coast of South Africa and goes through a process called retroflection (where an ocean current bends back or reverses direction), and out towards both oceans. The western edge at 10°E is the most important part. If the region stopped at the tip of Africa, drifters heading into the Atlantic would leave almost immediately, making it difficult to compare the two outcomes we are interested in.
 
-## 3. Why this problem is important
+We ran the same counts on four regions (Table 1). Benguela has far fewer drifters, and when we considered per cell rather than in total, its 25th percentile is only 29 drifters per cell compared to the 76 drifters per cell for Agulhas. The two smaller Agulhas boxes actually has slightly better support per cell, but the "source only" box cuts off the retroflection, and the smaller box loses the northern source region, which is where our upstream starting cell would be located. Therefore, we accepted some thinner edge cells in exchange for keeping the whole system in one box. Since changing the boundary also changes the question being studied, we preferred to choose the region based on the research question rather than on which region had the best data coverage.
 
-The Agulhas carries Indian Ocean water along South Africa before retroflecting east; some water enters the Atlantic through Agulhas leakage. This exchange matters for ocean circulation and climate (Beal et al., 2011). Western boundary currents have high eddy variability (Lumpkin and Johnson, 2013), so a single path obscures the range of possible destinations.
+**Table 1.** The same counts applied to every candidate box (2° cells).
 
-Release-dependent probabilities can inform how search areas or pollution pathways are studied and give the client a reusable tool for regional transport analysis. Drifters are established observing platforms for evaluating ocean conditions and forecasts (Centurioni et al., 2019). They are imperfect proxies for life rafts, oil or plastic: drogue status, buoyancy, wind and waves affect motion differently. Our operator estimates historical drifter transport, rather than an operational forecast for a specific object. West/east box exits are directional proxies, not direct measurements of Atlantic/Indian Ocean exchange.
+| Box | Longitude | Latitude | Hourly records | Distinct drifters | Occupied cells | Cells with ≥10 drifters | Median drifters/cell (25th pct) |
+|---|---|---|---|---|---|---|---|
+| **Chosen R (Agulhas)** | 10°E–45°E | 45°S–20°S | 3,848,969 | 1,149 | 178 / 234 | 171 | 116 (76) |
+| Benguela | 0°–20°E | 38°S–15°S | 2,538,266 | 706 | 97 / 120 | 84 | 118 (29) |
+| Tighter Agulhas | 10°E–40°E | 45°S–25°S | 3,020,671 | 1,051 | 125 / 150 | 123 | 137 (101) |
+| Source region only | 20°E–45°E | 40°S–20°S | 1,827,496 | 628 | 92 / 130 | 90 | 98 (70) |
+
+**Data.** We use the NOAA Global Drifter Program hourly product v2.01.1 (Elipot et al., 2016; 2022), accessed through CloudDrift `gdp1h()` on 22 September 2026. Each drifter follows the water at 15 m through its drogue, and the hourly product gives a position, velocity and sea-surface temperature on a regular one-hour grid, each with an uncertainty. For a transition matrix we only need `lon`, `lat`, `time` and `rowsize` (to know which rows belong to which drifter), plus `drogue_lost_date` and `typedeath` per drifter.
+
+A few things we checked before trusting any count: 
+
+- **Pipeline check.** To verify that our code correctly processes and filters the data, we compared our results with the course's examples. Our code identified the same 452 drifters in the East Australian Current region and 3,848,969 observations in the Agulhas region. This confirms that our data filtering produces results consistent with those provided in the course materials.
+- **Data audit.** We checked the dataset for missing or invalid coordinates, duplicate timestamps and irregular time intervals. We found no missing or out-of-range coordinates or duplicate timestamps. However, approximately 0.04% of consecutive observations were not exactly one hour apart. To account for these irregularities, we use the actual time difference between observations when identifying seven-day transitions, rather than assuming that 168 consecutive observations always represent seven days.
+- **Record length.** Although the Global Drifter Program dataset contains observations dating back to 1987, the earliest observation within our chosen Agulhas region was recorded on 31 March 1995. Therefore, our analysis covers approximately 27 years of regional data, from 1995 to 2022.
+- **Counting drifters, not records.** Since each drifter records its position every hour, a single drifter can produce hundreds of observations within the same cell. These observations are closely related and should not be treated as independent data points. To avoid overestimating data coverage, we count the number of unique drifters passing through each cell rather than the total number of observations. Our analysis shows that 171 of the 178 occupied 2° cells contain observations from at least 10 distinct drifters, with a median of 116 drifters per cell. This indicates that most cells have sufficient coverage from multiple drifters to support our transition matrix analysis.
+
+## 3. Why this problem matters
+We chose this project because understanding where floating objects travel in the ocean is important for real world applications such as search and rescue, oil spill response and fisheries management. The Agulhas Current is worth obtaining information from due to its strong currents and large number of eddies, which create complex and unpredictable movement patterns. In fact, the retroflection process in the Agulhas is considered one of the most eddy-energetic regions, alongside the Gulf Stream and Kuroshio (Lumpkin & Johnson, 2013). As a result, predicting a single path may not accurately represent where floating material could travel. Instead, our project aims to estimate the probabilities of different destinations, providing a better understanding of the possible transport pathways.
+
+One of the main reasons we selected the Agulhas region is the way the current splits near the southern coast of Africa. While most of the water turns back east towards the Indian Ocean, some currents continue west into the Atlantic Ocean. This makes the region particularly useful for investigating how the starting location of floating material influences its direction and destination. Drifter data is well suited to this analysis because drifters move with ocean currents, allowing us to observe how water travels over time. In comparison, satellites estimate ocean currents indirectly and may miss smaller-scale features below approximately 100 kilometres, which may change how the data perceives the eddies' influence on the direction of transport in the Agulhas region.
+
+However, it is important to recognise the limitations of our analysis. The probabilities generated by our transition matrix represent the movement patterns observed in historical drifter data, rather than the actual volume of water transported between the two oceans. Additionally, objects such as oil and debris may be affected by wind and waves differently from drogued drifters, which are designed to follow ocean currents at a depth of approximately 15 metres. Therefore, our model aims to provide useful insights into likely transport pathways rather than precise predictions of real-world events.
 
 ## 4. Background and existing studies
+The Agulhas Current flows southwest along the South African coast at average speeds of 0.6–1.5 m/s (Lumpkin & Johnson, 2013), before turning back east towards the Indian Ocean through the retroflection process. However, the exact location of this turning point varies between studies. Lumpkin and Johnson (2013) estimated that the current typically turns between 20°E and 23°E using drifter observations, while Russo et al. (2021) analysed 26 years of satellite data (1993–2018) and found that retroflection generally occurs between 15°E and 20°E. Their research also showed that the turning point changes over time, with earlier retroflections occurring more frequently during austral spring and summer. These findings suggest that ocean circulation in the Agulhas region varies seasonally, which is why our project will investigate the influence of seasons on transport patterns.
 
-Lumpkin and Johnson (2013) estimated global mean and seasonal surface velocities from drogued drifters. Such Eulerian maps describe local flow, whereas our Lagrangian question concerns where material travels. Russo et al. (2021) investigated spatial and temporal variability of the Agulhas Retroflection using satellite observations, motivating a seasonal comparison rather than assuming a fixed separation pattern.
+Previous research has explored similar questions using drifter data and transition matrices. McAdam and van Sebille (2018) developed transition matrices using Global Drifter Program data to investigate the movement of particles released from a location within the Agulhas Current (31°E, 32°S). Using a 60-day time step, they estimated that approximately 18–25% of the released tracer entered the Atlantic Ocean by crossing the Good Hope line, while 55–61% returned east through the retroflection. However, they also identified a limitation known as *artificial dispersion*, where dividing ocean trajectories into grid cells can introduce additional spreading that does not necessarily reflect the actual movement of water. This effect generally increases with larger grid cells and shorter time steps, potentially influencing the estimated transport probabilities. Similarly, Miron et al. (2017) used drifter-based transition matrices to investigate connectivity between different areas of the Gulf of Mexico, demonstrating how this approach can be applied to understand transport patterns across an entire region.
 
-**Closest method.** McAdam and van Sebille (2018) constructed drifter-based transition matrices and investigated Agulhas transport and connectivity using different grid sizes and 5-, 20-, 60- and 180-day steps. Gridding can artificially connect different flows within one cell; their idealised experiments showed greater artificial dispersion with larger cells and shorter steps. Real-ocean parameter effects were less simple, so sensitivity must be reported rather than assuming one setting is correct.
+Although our project builds on these existing studies, we aim to extend their work in three main ways:
 
-Our project applies this established method to the hourly GDP product with a weekly step, compares three regional release regimes and evaluates predictions on whole drifters excluded from estimation. Its contribution is a reproducible regional application and explicit evaluation, not a new transition-matrix theory. The literature's interocean percentages are not numerical targets: its crossing boundaries, treatment of recirculation and horizons differ from our rectangular first-exit operator. Support checks, interval sensitivity and transparent limitations will determine whether our questions are answerable.
+1. **Starting location and transport probabilities:** McAdam and van Sebille (2018) investigated the movement of tracer released from a single starting location. In comparison, our project will examine multiple starting cells across the Agulhas region to understand how starting location influences the probability of westward transport into the Atlantic Ocean or eastward transport towards the Indian Ocean.
 
-## 5. Proposed method
+2. **Higher temporal resolution:** McAdam and van Sebille (2018) used six-hourly drifter data with time steps of 5, 20, 60 and 180 days. Our project uses the newer hourly GDP dataset, which provides greater temporal detail and reduces the aliasing of tidal and inertial movements associated with six-hourly sampling. This allows us to identify drifters that temporarily leave the region and return within a seven-day period, rather than relying only on their final position. We will also investigate how different time steps influence our results, particularly given the effects of artificial dispersion identified in previous research.
 
-**Preparation and split.** Audit coordinates, longitude convention, timestamps, duplicates, hourly gaps, termination metadata and drogue flags. Save an **80/20 split by complete drifter ID, seed 42**, before defining support, merged states or release locations. Missing or ambiguous observations receive reason codes; no extra interpolation is introduced. Any tuning uses training drifters only.
+3. **Model validation and reliability:** Our project will evaluate the transition matrix using drifters that were not included when estimating the model. By comparing predicted transport probabilities with observed outcomes, we aim to assess how reliably the matrix represents movement within the region. We will also compare our findings with McAdam and van Sebille (2018) to provide context for our estimated westward transport probabilities. However, a direct numerical comparison is not appropriate because our western exit boundary is defined at 10°E, whereas their study used the Good Hope line. Differences in grid resolution and time steps may also influence the results. Therefore, their findings will serve as a reference for interpretation rather than a specific target our model must achieve.
 
-**Daily outcomes.** Use exact 00:00 UTC origins in R and locate the same drifter **168 hours later by timestamp**. Inspect intervening hourly positions. Stop at the first observed exit, even if the buoy returns, assigning west/east/north/south by the segment's first boundary crossing. A confirmed terminal `typedeath = 1` inside R gives a separate grounded outcome, using the terminal time as a proxy. Other early endings are censored; gaps before an outcome make it unusable. An already observed exit/grounding remains usable without a day-7 endpoint. Drogue loss is not termination. Log invalid and censored origins by cell and season because missing outcomes may be informative.
+## 5. Proposed Method
 
-**States and probabilities.** Start with **2-degree cells**, anchored at the south-west corner with half-open bounds and clipped edge cells. Merge sparse cells with adjacent observed cells until retained origin groups have at least **10 distinct training drifters with usable outcomes**. Recount unique IDs after merging; occupancy alone is insufficient. Use a deterministic shared-edge neighbour rule, then freeze and publish the training-only lookup. Unsupported origins are excluded and reported; residual unsupported destinations enter a separately reported unresolved diagnostic, preserving their probability. Estimate **P_ij = N_ij / sum_j N_ij**, where N_ij counts usable training outcomes from i to j. Exits, grounding and unresolved are absorbing. Ten contributors is a support rule, not a guarantee of precision; merging also reduces spatial resolution.
+We use Python in Google Colab and VS Code, with CloudDrift to access the Global Drifter Program hourly dataset and GitHub for version control and collaboration.
 
-**Transport and interpretation.** Choose three supported training states by geography, recording coordinates, merged extent and support before test evaluation. Propagate a row distribution as **p(k) = p(0) P^k**, using P, P^4 and P^52 for 7/28/364 days. Map absolute remaining mass and each absorbing fraction. For RQ2, start with equal mass per supported state, analyse directed connections and concentration conditional on survival, and report surviving mass. This scenario is not measured debris density or uniform concentration over unequal-area groups. First-exit absorption excludes later re-entry; annual propagation assumes stationary first-order Markov transport.
+**Building the pairs.** For each drifter with observations within our study region, we use its position at 00:00 UTC on each day as a starting point, provided that the starting position lies within (R). From each starting point, we examine the drifter's trajectory over the following seven days. Using one starting point per day reduces the number of highly similar observations compared with hourly sampling, while retaining sufficient temporal resolution for the construction of a weekly transition matrix. We retain the full trajectory, including observations outside R, so that departures from the region can be identified. We use the recorded timestamps to define seven-day intervals rather than assuming that 168 consecutive observations necessarily represent exactly seven days.
 
-**Validation and variants.** On untouched test drifters, report top-three destination coverage against persistence, which supplies one positive-probability guess. Report the asymmetry, predicted top-three mass, usable sample counts, unsupported-origin coverage and pooled/per-drifter scores. Separate geographic successes from exits, grounding and unresolved. Add Brier score as a probability comparison. Fit **drogued-only, 3-day and DJF/MAM/JJA/SON** variants on the same split, recomputing training support/merges; compare physical exits or compatible geographic reporting regions. Require known drogued status throughout each observed interval. Compare 3-/7-day operators at **21 days** and seasonal one-step behaviour first. Later checks include direct 28-day outcomes, whole-drifter bootstrap, equal-drifter weighting and 1-degree grids; seasonal multi-step propagation requires common states and calendar switching. Save all results and exclusions, including weak or negative findings.
+- **First exits.** If a drifter is observed outside R within the seven-day interval, we record its first observed exit classify it according to the boundary crossed: west, east, south or north. The exit is treated as an absorbing state, meaning that once a drifter has been classified as having exited, it remains in that exit state even if it subsequently returns to R. Our preliminary analysis found that 1,448 of the 11,246 recorded exits (12.9%) had returned to R by day seven. This demonstrates why the full trajectory must be examined rather than using only the final position, otherwise these cases could incorrectly be classified as remaining within the region.
 
-## 6. Initial analysis and visualization
+- **Incomplete observations and grounding.** If a drifter's record ends before the seven-day interval, we retain a confirmed first exit if one occurred before the record ended. If no exit is observed and the drifter's seven-day destination cannot be established, the pair is treated as incomplete and excluded from the transition estimates. We also investigate grounding events using `typedeath = 1` and the recorded end time, assigning a separate grounded state only when grounding can be established within the relevant seven-day interval. This is important because 190 of the 1,149 drifters entering R were recorded as grounded, including 70 whose records ended within the region.
 
-**Spatial adequacy.** At 2 degrees, **178/234 cells** are occupied; **171** have at least 10 drifters, with median **116** and IQR **76-168**. At 1 degree, **649/875** cells are occupied, **614** have at least 10 and the median is **71** (Figure 1). These are occupancy statistics, not post-split transition support. Empty ocean cells are unsampled; they must not automatically be labelled land.
+- **Data selection.** Our preliminary analysis produced 154,139 usable seven-day pairs, although this number may change after refining the treatment of incomplete observations and grounding. We include both drogued and undrogued drifters, consistent with McAdam and van Sebille (2018), while retaining drogue status for the sensitivity analysis in RQ3.
 
-![Distinct drifters per 1-degree cell in Agulhas](figures/coverage_1deg.png)
+**The matrix.** We divide the Agulhas region into 2° grid cells and include four additional exit states representing the western, eastern, southern and northern boundaries. For each drifter starting within the region, we examine its observed movement over the following seven days. If the drifter remains within the region throughout this period, its destination is the grid cell occupied at day seven. However, if it crosses the region's boundary at any point, we record the direction of its first exit, even if it subsequently returns. These exit states are treated as absorbing, meaning that once a drifter is classified as having exited, it remains in that state for all subsequent modelled transitions.
 
-*Figure 1. Historical coverage in R, 1995-2022. Crosses mark fewer than 10 drifters. Data: NOAA GDP hourly v2.01.1; coastline: Natural Earth. This map motivates checking spatial support before estimating P.*
+We construct the transition matrix $P$ by counting the observed transitions between starting cells and their outcomes, then dividing each count by the total number of usable transitions from that starting cell. Each row therefore sums to one and represents a probability distribution across possible outcomes. Importantly, $P$ describes movement within the region up to the first departure, followed by an absorbing exit state. It does not track the physical location of drifters after they leave the region. Our preliminary analysis identified 171 of 177 starting cells with at least 10 distinct drifters, and we plan to merge the remaining six cells with neighbouring cells to improve statistical support.
 
-**Time and measurement coverage.** All 28 calendar years have records, but coverage is uneven: the median is 65 drifters/year, from 4 in 1997 to 128 in 2016. Seasonal drifter counts are DJF **676**, MAM **704**, JJA **735** and SON **714**; a buoy can appear in multiple seasons. Only **33.3%** of regional records are drogued by the loss-date rule, with **99.9%** agreement with the per-record flag. Drogued-only support is therefore weaker and must be reassessed, not assumed equal to all-track support.
+**Answering the Research Questions.**
 
-**Termination audit.** Of 1,149 entering drifters, 840 have their last observation outside R. Of the 309 ending inside, 70 are confirmed grounded and 203 stop transmitting; the other 36 are also censored. These final-record categories do not measure daily-origin first-exit probabilities. Together, the checks support attempting the proposed analysis while highlighting sparse early years, drogue differences and censoring.
+- **RQ1.** We apply the seven-day transition matrix $P$ to three well-supported starting cells to estimate transport probabilities after 7, 28 and 364 days, using $P$, $P^4$ and $P^{52}$ respectively. As the exit states are absorbing, these projections represent the probability of remaining within specific cells or having first exited through a particular boundary. They do not describe a drifter's physical location after leaving R. Longer-term projections, particularly at 364 days, will be interpreted cautiously and depend on the model's validation results.
 
-## Proposed timeline
+- **RQ2.** We use the transition matrix to investigate how different areas of R exchange material and to identify cells that are more likely to receive, retain or lose floating material. To examine regional transport patterns, we begin with an equal amount of material in each grid cell and apply the matrix repeatedly to observe how it is redistributed throughout the region. This approach reduces the influence of uneven drifter sampling, as some areas contain more observations due to the currents and deployment patterns. We also map the probability of westward and eastward exits for each starting cell to identify how transport pathways vary across the region.
 
-| Milestone | Planned work and completion check |
-|---|---|
-| Week 4 | Finalise and review proposal, figure and citations; freeze and submit |
-| Week 5, Session 2 | Present poster: region, initial evidence and method; complete peer feedback |
-| Week 5, end | Audit full tracks; save split IDs and 7-day outcomes; check events and censoring |
-| Week 6, end | Merge supported states; estimate P; check row sums and mass conservation |
-| Week 7, end | Map 7/28/364-day release destinations, absorbing fractions and regional connectivity |
-| Week 8, end | Evaluate against persistence; report top-three coverage, Brier score and denominators |
-| Week 9, end | Compare drogue, 3-day and seasonal variants; summarise sensitivity and limitations |
-| Week 10 | Rehearse and present checked results; draft final report |
-| Exam period | Review report, reproducibility and AI reflection; freeze 24 hours before submission |
+- **RQ3.** We evaluate the matrix using held-out drifters and investigate how its results change with different time steps, grid resolutions, drogue status and seasons, as described below.
+
+**Model Evaluation and Sensitivity Analysis (RQ3).**
+
+- **Predictive performance.** We propose splitting the dataset into training (60%), validation (20%) and testing (20%) sets, keeping entire drifter trajectories within a single set to prevent data leakage. The training set will be used to construct the matrix, the validation set to select model settings, and the test set to assess final performance. We will use the multiclass Brier score to evaluate the accuracy of predicted destination and exit probabilities, alongside the top-three destination hit rate. Results will be compared against simple baseline models, including predicting that a drifter remains in its starting cell.
+
+- **Longer-term reliability.** We compare the 28-day probabilities estimated by $P^4$ with directly observed 28-day outcomes, using the same first-exit classification rule. This allows us to assess whether repeatedly applying the seven-day matrix provides reasonable longer-term estimates. Substantial differences would suggest limitations in the model's assumptions, particularly its dependence on the current state alone, and would reduce our confidence in the 364-day projections.
+
+- **Sensitivity analysis.** We investigate how the estimated transport probabilities change when using only drogued drifters, shorter three-day time steps, different grid resolutions and separate seasons. Previous research by McAdam and van Sebille (2018) showed that grid-based transition matrices can introduce artificial dispersion, particularly with larger cells and shorter time steps. Comparing these model variations will help us assess the robustness of our findings and identify any important limitations.
+
+## 6. Initial Analysis and Visualisation
+
+Our preliminary analysis, conducted using `Proposal_code.ipynb`, indicates that the Agulhas region has sufficient drifter coverage to support the proposed transition matrix. However, uneven temporal coverage and differences in drogue status may affect the reliability of our estimates. The figures use a single-hue blue colour scale for readability, while cells containing fewer than 10 distinct drifters are marked with crosses to highlight areas with limited data.
+
+**Spatial coverage.** Figure 1 shows the number of distinct drifters passing through each 1° grid cell. Of the 649 occupied cells, 614 contain observations from at least 10 distinct drifters, with a median of 71 drifters per cell. Areas with lower coverage are mainly located along the Namibian and South African coastlines and near Madagascar, while the open ocean generally has stronger coverage. A particularly high concentration of drifter observations occurs around 38–41°S, following the Agulhas Return Current. This pattern may reflect the influence of strong ocean circulation on where drifters travel and are sampled. However, higher drifter density does not necessarily indicate that floating material accumulates in these areas, as the observations are influenced by both ocean dynamics and sampling patterns.
+
+<img width="700" height="551" alt="download (1)" src="https://github.com/user-attachments/assets/867b32f4-f4e6-4626-b74c-1ea8ec5ffd68" />
+
+**Coverage over time and season.** Every year from 1995 to 2022 has at least one drifter in R, but coverage is substantially lower in the earlier years. The median number of drifters per year was 7 during 1995–1999, compared with 62 during 2000–2009 and 83 during 2010–2022 (Figure 2). There is also a decline in coverage around 2012–2014. In practice our transition matrix is more strongly informed by observations from 2000 onwards. This is acceptable for estimating overall transport patterns, but the uneven coverage means we should not use the matrix to draw conclusions about how transport changes over time. Seasonal coverage is more evenly distributed (Table 2), suggesting that separate seasonal analyses in RQ3 are feasible.
+
+<img width="684" height="301" alt="download (2)" src="https://github.com/user-attachments/assets/1dad5d05-3649-475a-96bd-33ea248e1791" />
+
+**Table 2.** Coverage by austral season (1° cells).
+
+| Season | Hourly records | Distinct drifters | Occupied cells | Median drifters/cell | Cells with ≥10 drifters |
+|---|---|---|---|---|---|
+| DJF (summer) | 858,391 | 676 | 634 | 18 | 533 |
+| MAM (autumn) | 1,012,587 | 704 | 639 | 21 | 543 |
+| JJA (winter) | 1,047,302 | 735 | 637 | 21 | 560 |
+| SON (spring) | 930,689 | 714 | 640 | 19 | 554 |
+
+**Drogue status.** Only 33.3% of records in R come from drogued drifters. We checked the drogue status in two ways, using `drogue_lost_date` and the per-record `drogue_status` flag, and the two measures agree 99.9% of records. Restricting the analysis to drogued drifters reduces the median number of drifters per 1° cell from 71 to 22, with 94 previously well-supported cells falling below 10 drifters. More importantly, these gaps are not evenly distributed. As shown in Figure 3, they cluster along the Agulhas Current, particularly around 32–38°S and 32–45°E. This is close to the source region of our upstream starting cell and to the release point considered by McAdam and van Sebille, making the drogued-only dataset weakest in an area that is particularly important to our research question. We therefore use all drifters for the main transition matrix and treat the drogued-only analysis as a sensitivity check using 2° cells. Because undrogued drifters can experience additional wind-driven slip, differences between the two versions may also indicate the extent to which wind affects the estimated westward and eastward transport probabilities.
+
+<img width="700" height="551" alt="download (3)" src="https://github.com/user-attachments/assets/8a74825c-d758-4ac9-8aaf-900aac8ea19c" />
+
+**How drifters end.** Table 3 shows most drifters (840, 73.1%) leave R before their record ends, which supports the inclusion of the outside states in the transition matrix. However, 203 drifters stop transmitting while still within R, which introduces some uncertainty in how these records should be classified. In particular, drifters that stop transmitting near the coast may have grounded without this being explicitly recorded in the dataset.
+
+**Table 3.** How the 1,149 drifters that enter R end.
+
+| `typedeath` | Meaning | How we treat it | Drifters | Record ends inside R |
+|---|---|---|---|---|
+| 0 | still alive | censored | 61 | 22 |
+| 1 | ran aground | real endpoint | 190 | 70 |
+| 2 | picked up by vessel | censored | 27 | 12 |
+| 3 | stop transmitting | censored | 857 | 203 |
+| 5 | bad batteries | censored | 1 | 0 |
+| 6 | inactive status | censored | 13 | 2 |
+| | **Total** | | **1,149** | **309** |
+
+**First look at the 7-day pairs.** Our preliminary analysis identified 154,139 usable seven-day pairs, of which 92.7% recorded no exit from R during the seven-day interval. The remaining 11,246 pairs recorded a first exit, with 32.0% exiting through the western boundary, 47.5% through the eastern boundary, 15.9% through the southern boundary and 4.7% through the northern boundary. These results suggest that eastern exits are more common than western exits over a seven-day period, consistent with the general eastward turning of the Agulhas Current during retroflection.
+
+However, these percentages describe the distribution of first exits across all starting cells and should not be interpreted as direct estimates of Agulhas leakage. Some western exits may originate from drifters already travelling within the Benguela Current system. Our next stage will therefore estimate exit probabilities for individual starting cells, allowing us to investigate how starting location influences westward and eastward transport.
+
+## 7. Timeline and Plan
+
+**Progress and approach.** Our project began in Week 1 (14 September) with selecting a suitable region and assessing whether the available drifter data could support our research questions. We compared four candidate regions using observation counts, spatial coverage and the number of distinct drifters per grid cell. We selected the Agulhas region because it provided sufficient data coverage and captured both the Agulhas Current and its retroflection, allowing us to investigate westward and eastward transport.
+
+During Weeks 2–3, we accessed the hourly GDP dataset through CloudDrift and verified our filtering against the course's East Australian Current example. We then conducted data quality checks, examined coverage across different years and seasons, and investigated drogue status and how drifter records end. These analyses helped us identify potential sampling limitations and informed our decision to use 2° cells for the transition matrix.
+
+We also developed a preliminary method for constructing seven-day origin-destination pairs, using daily starting observations and tracking drifters beyond the regional boundaries to identify first exits. This produced 154,139 preliminary usable pairs and confirmed the feasibility of constructing a transition matrix. Following lecturer feedback, we will refine the handling of incomplete observations, grounding events and the first-exit rule before estimating the final matrix.
+
+**Implementation timeline.** The remaining work is organised around the course assessments, with each stage producing a result that contributes directly to the final transport model.
+
+| Week | Planned activities | Deliverables |
+|---|---|---|
+| **1–3 (14 Sep)** | Select and justify the region, access and verify the dataset, conduct data audits and coverage analysis, and construct preliminary seven-day pairs. | Completed: Tables 1–3, Figures 1–3 and `pairs7.csv`. |
+| **4 (5 Oct)** | Finalise research questions, proposed methodology, preliminary findings and implementation plan, incorporating lecturer feedback. | **Project Proposal/README**, Thu 8 Oct. |
+| **5 (12 Oct)** | Refine the seven-day pairs to handle first exits, incomplete follow-up and grounding. Address poorly supported cells and construct the initial transition matrix using a drifter-level training split. Produce preliminary destination and exit probabilities for selected starting cells. | Initial matrix, probability results and **poster session**, Thu 15 Oct. |
+| **6 (19 Oct)** | Refine the three starting-cell analyses, examine seven-day transport patterns and develop 28-day projections. Incorporate feedback from the poster session. | RQ1 probability maps, exit summaries and **poster peer review**, Thu 22 Oct. |
+| **7 (26 Oct)** | Investigate connectivity between grid cells, regional redistribution and how westward and eastward exit probabilities vary by starting location. | RQ2 connectivity and regional transport maps. |
+| **8 (2 Nov)** | Evaluate predictive performance using separate training, validation and test drifters, the multiclass Brier score, top-three hit rate and baseline comparisons. Compare $P^4$ with directly observed 28-day outcomes and test sensitivity to time step, grid resolution, drogue status and season. | RQ3 validation results and sensitivity figures. |
+| **9 (9 Nov)** | Refine the model based on validation results, assess whether 364-day projections are reliable enough to report, and package the matrix and code for reuse with other regions. | Final transport model, reproducible code and report outline. |
+| **10 (16 Nov)** | Consolidate findings, prepare visualisations and rehearse the group presentation. | **Group presentation**, 12 + 3 minutes, in class. |
+| **11 (23 Nov)** | Finalise the methodology, findings, limitations and conclusions, incorporating feedback from the presentation. | **Final modelling report**, Thu 26 Nov. |
+
+**Evaluation and project management.** Our approach prioritises developing a reliable seven-day transition matrix before extending it to longer periods. We will separate drifters into training (60%), validation (20%) and testing (20%) sets, ensuring that observations from the same drifter do not appear across multiple sets. Model settings will be selected using validation data, while the test set will provide an independent assessment of performance. Longer-term projections will only be interpreted where supported by these checks.
+
+We use GitHub to manage code and documentation, with Google Colab and VS Code supporting analysis and development. Our notebooks and saved outputs allow us to reproduce preliminary results and revisit earlier decisions. We will use feedback from the proposal, poster and peer-review sessions to refine the methodology before the final presentation and report.
+
+**Risks and contingency plans.** We have identified several challenges that could affect the accuracy or feasibility of our analysis, along with practical alternatives.
+
+| Risk | Potential impact | Mitigation strategy |
+|---|---|---|
+| **Insufficient data in some grid cells** | Unreliable transition probabilities, particularly for seasonal or drogued-only analyses. | Check distinct drifters contributing valid transitions and merge poorly supported neighbouring cells. Pool seasonal categories if necessary. |
+| **Incomplete trajectories or uncertain grounding events** | Incorrect classification of seven-day outcomes. | Retain confirmed first exits, verify grounding within the observation window and exclude unresolved outcomes from complete-case transition estimates. |
+| **Limitations of the Markov assumption** | Iterating the weekly matrix may produce unreliable longer-term projections. | Compare $P^4$ with directly observed 28-day outcomes. Prioritise validated short-term results and treat $P^{52}$ as exploratory if necessary. |
+| **Artificial dispersion from grid resolution or time step** | Estimated transport probabilities may depend heavily on modelling choices. | Compare different grid sizes and time steps, and report the sensitivity of key findings. |
+| **Uneven spatial and temporal sampling** | Some regions or periods may be disproportionately represented. | Examine coverage by cell, year, season and drogue status, and acknowledge limitations where coverage is insufficient. |
+| **Data access or processing failures** | Delays in analysis and model development. | Use the existing retry mechanism for CloudDrift downloads and save intermediate results to avoid repeated processing. |
+
+**Feasibility.** Our preliminary analysis has established that the Agulhas region contains sufficient observations for the proposed modelling approach and that seven-day transitions can be constructed from the available records. The main remaining challenge is therefore not data availability, but ensuring that the transition probabilities are correctly defined, statistically reliable and appropriately interpreted. By prioritising the initial matrix, evaluating its performance before extending the time horizon, and retaining simpler alternatives where necessary, we believe the project is achievable within the remaining teaching period.
+
+**Repository.** We will tidy the repo into a clearer layout: `src/` for data access, filtering and the matrix code, `results/` for P and the summary counts, `figures/` for maps, and an `environment.yml` and `data/README.md` recording package versions and the data release, so someone else can rerun everything.
 
 ## References
 
-- Beal, L. M., de Ruijter, W. P. M., Biastoch, A., Zahn, R., and SCOR/WCRP/IAPSO Working Group 136 (2011). On the role of the Agulhas system in ocean circulation and climate. *Nature*, 472, 429-436. [doi:10.1038/nature09983](https://doi.org/10.1038/nature09983).
-- Centurioni, L. R., et al. (2019). Global in situ Observations of Essential Climate and Ocean Variables at the Air-Sea Interface. *Frontiers in Marine Science*, 6, 419. [doi:10.3389/fmars.2019.00419](https://doi.org/10.3389/fmars.2019.00419).
-- Elipot, S., Lumpkin, R., Perez, R. C., Lilly, J. M., Early, J. J., and Sykulski, A. M. (2016). A global surface drifter data set at hourly resolution. *Journal of Geophysical Research: Oceans*, 121, 2937-2966. [doi:10.1002/2016JC011716](https://doi.org/10.1002/2016JC011716).
-- Elipot, S., Sykulski, A., Lumpkin, R., Centurioni, L., and Pazos, M. (2022). *Hourly location, current velocity, and temperature collected from Global Drifter Program drifters world-wide*. NOAA NCEI, v2.01.1; Agulhas subset; accessed 2026-09-22. [doi:10.25921/x46c-3620](https://doi.org/10.25921/x46c-3620).
-- Lumpkin, R., and Johnson, G. C. (2013). Global ocean surface velocities from drifters: Mean, variance, El Niño-Southern Oscillation response, and seasonal cycle. *Journal of Geophysical Research: Oceans*, 118, 2992-3006. [doi:10.1002/jgrc.20210](https://doi.org/10.1002/jgrc.20210).
-- McAdam, R., and van Sebille, E. (2018). Surface Connectivity and Interocean Exchanges From Drifter-Based Transition Matrices. *Journal of Geophysical Research: Oceans*, 123, 514-532. [doi:10.1002/2017JC013363](https://doi.org/10.1002/2017JC013363).
-- Russo, C. S., Lamont, T., and Krug, M. (2021). Spatial and temporal variability of the Agulhas Retroflection: Observations from a new objective detection method. *Remote Sensing of Environment*, 253, 112239. [doi:10.1016/j.rse.2020.112239](https://doi.org/10.1016/j.rse.2020.112239).
+**Data**
 
-## Repository guide (outside the proposal page count)
+- Elipot, S., Sykulski, A., Lumpkin, R., Centurioni, L., & Pazos, M. (2022). *Hourly location, current velocity, and temperature collected from Global Drifter Program drifters world-wide* (Version 2.01.1) [Data set]. NOAA National Centers for Environmental Information. https://doi.org/10.25921/x46c-3620. Accessed 22 September 2026 via CloudDrift.
 
-The proposal body above is the editable source. The export script writes a matching standalone [PROPOSAL.md](PROPOSAL.md) and PDF; edit this README and regenerate both to keep them aligned. Member allocation is omitted from the proposal at the user's request; a separate blank template remains in [TEAM_ALLOCATION.md](TEAM_ALLOCATION.md). The proposed schedule is detailed in [PROJECT_TIMELINE.md](PROJECT_TIMELINE.md); exact course deadlines should be checked against Moodle before the group confirms it. All project Markdown documents should be maintained in English.
+**Literature**
 
-| File | Purpose |
-|---|---|
-| [PROPOSAL.md](PROPOSAL.md) | Standalone proposal Markdown, generated from this README and matching the PDF content |
-| [PROJECT_TIMELINE.md](PROJECT_TIMELINE.md) | Proposed milestones, tasks and completion checks, without named assignments |
-| [TEAM_ALLOCATION.md](TEAM_ALLOCATION.md) | Blank task, name, student ID, deliverable and timing fields for teammates to fill |
-| [PROJECT_PROGRESS.md](PROJECT_PROGRESS.md) | Changes, evidence checks, section status and remaining research work |
-| [TRANSPORT_METHOD.md](TRANSPORT_METHOD.md) | Detailed planned implementation, events, neighbour merging, scoring and acceptance cases |
-| [analysis/section2_lucy.ipynb](analysis/section2_lucy.ipynb) | Exact notebook from local `origin/lucy` (`4e3d1ef`), including saved outputs; original muyao notebook retained |
-| [analysis/proposal_evidence.json](analysis/proposal_evidence.json) | Offline cache re-counts, saved notebook text, seasonal table and figure provenance |
-| [analysis/reference_evidence.json](analysis/reference_evidence.json) | Crossref/DataCite metadata checked on 2026-10-06 |
-| [scripts/prepare_proposal_evidence.py](scripts/prepare_proposal_evidence.py) | Offline extraction of notebook figures and verification of occupancy statistics |
-| [scripts/build_proposal_pdf.py](scripts/build_proposal_pdf.py) | Export standalone proposal Markdown and render the same content to A4; check the body page limit |
-| [output/pdf/proposal.pdf](output/pdf/proposal.pdf), [output/pdf/layout_check.json](output/pdf/layout_check.json) | Proposal PDF and page-count/visual inspection record; member allocation omitted at user request |
-| [region_adequacy_results.json](region_adequacy_results.json), [gdp_1deg_grids.npz](gdp_1deg_grids.npz) | Original spatial evidence; the JSON's historical Benguela box differs from Table 1 |
-| [region_adequacy_check.py](region_adequacy_check.py), [section2 .ipynb](section2%20.ipynb) | Original data-adequacy workflow and muyao notebook |
-
-Offline evidence preparation: `python scripts/prepare_proposal_evidence.py` (Python 3 and NumPy). This extracts saved figures and recounts the spatial cache; it does not download GDP data, execute the notebook or fit P.
-
-PDF review export: `python scripts/build_proposal_pdf.py` (ReportLab, pypdf and Pillow). The repository guide is excluded from the proposal page count; after editing, render and inspect the new PDF before treating it as checked.
+- Elipot, S., Lumpkin, R., Perez, R. C., Lilly, J. M., Early, J. J., & Sykulski, A. M. (2016). A global surface drifter data set at hourly resolution. *Journal of Geophysical Research: Oceans, 121*(5), 2937–2966. https://doi.org/10.1002/2016JC011716
+- Lumpkin, R., & Johnson, G. C. (2013). Global ocean surface velocities from drifters: Mean, variance, El Niño–Southern Oscillation response, and seasonal cycle. *Journal of Geophysical Research: Oceans, 118*(6), 2992–3006. https://doi.org/10.1002/jgrc.20210
+- McAdam, R., & van Sebille, E. (2018). Surface connectivity and interocean exchanges from drifter-based transition matrices. *Journal of Geophysical Research: Oceans, 123*(1), 514–532. https://doi.org/10.1002/2017JC013363
+- Miron, P., Beron-Vera, F. J., Olascoaga, M. J., Sheinbaum, J., Pérez-Brunius, P., & Froyland, G. (2017). Lagrangian dynamical geography of the Gulf of Mexico. *Scientific Reports, 7*, Article 7021. https://doi.org/10.1038/s41598-017-07177-w
+- Russo, C. S., Lamont, T., & Krug, M. (2021). Spatial and temporal variability of the Agulhas Retroflection: Observations from a new objective detection method. *Remote Sensing of Environment, 253*, Article 112239. https://doi.org/10.1016/j.rse.2020.112239
