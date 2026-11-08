@@ -1,6 +1,11 @@
 # Yoyo – seasonal analysis and 2° coverage map (Stage 5 Task A, Stage 2 Task C)
 
-Status 7 Nov: first full results. **For Lucy's checks on 10 and 12 Nov.**
+Status 9 Nov: seasonal results checked against observed 56 / 91-day outcomes (Lucy's chaining method). **For Lucy's checks on 10 and 12 Nov.**
+
+**Summary for the meeting (9 Nov)**
+1. **B west in Winter is the solid result.** Westward (Atlantic) exits from B by day 91 drop in Winter. This shows up in the matrix (11.3% vs about 19–23%) *and* directly in the drifters (6.8% vs 22.0% for the rest of the year, −15.2 pp [−28.4, −0.1]). The seasonal matrix matches the observed B west share in every season.
+2. **C east is underestimated by the matrix, and the observed data show a Summer effect the matrix misses.** Observed 91-day east exit from C is 38% in Summer vs 63% in the rest of the year (−25.4 pp [−49.1, −1.1]). The matrix gives 35–45% in every season, so it hides this. The gap is largest in Autumn and Spring (+25 and +35 pp).
+3. **Drop the "A turns east in Winter" claim.** It came from the matrix only. Observed A east in Winter is 12.3% [0.0, 39.3] from 18 drifters, so it is not supported.
 
 ## How to reproduce
 
@@ -9,9 +14,10 @@ Put `pairs7.csv` (DATA3001 handover folder) next to the scripts, or one folder u
 ```bash
 python yoyo_coverage_map.py
 python yoyo_seasonal_analysis.py
+python yoyo_seasonal_validation.py
 ```
 
-Each takes about 30 s and writes everything to `yoyo_outputs/`. The only packages needed are numpy, pandas and matplotlib.
+Each takes 30–60 s and writes everything to `yoyo_outputs/`. `yoyo_seasonal_validation.py` also needs Zack's `drifter_split.csv` (in the repo). The only packages needed are numpy, pandas and matplotlib.
 
 ## Lucy's check items
 
@@ -46,9 +52,10 @@ Each takes about 30 s and writes everything to `yoyo_outputs/`. The only package
    - The 91-day west exit drops in **Winter**: 11.3% [6.8, 16.4], compared with about 19–23% in the other seasons. Winter minus rest of year is **−9.5 pp [−15.7, −3.3]**. This is the largest seasonal effect we found.
    - Summer and Spring are higher, but their CIs include 0.
 3. **A (upstream Agulhas Current).**
-   - In **Winter**, more A drifters turn back east by 91 days: 18.8% [13.6, 24.8], +7.6 pp [+1.7, +14.0].
+   - In **Winter**, the matrix says more A drifters turn back east by 91 days: 18.8% [13.6, 24.8], +7.6 pp [+1.7, +14.0].
    - Fewer go west in Winter: 1.1%, −2.5 pp [−4.1, −1.2].
-4. **C (return current).** There is no clear seasonal effect. The 91-day east exit is 36–42% in every season, and every CI overlaps the others.
+   - **Not confirmed by the observed outcomes** (next section), so not for the slides.
+4. **C (return current).** In the matrix there is no clear seasonal effect: the 91-day east exit is 36–42% in every season. **The observed outcomes disagree** (next section): C east is much lower in Summer.
 5. **28 days is too short for A, B and C to reach the boundary.** All 28-day exit probabilities are below 1%. This matters for the validation storyline: P⁴ vs observed 28-day outcomes should compare destination cells, not just exits.
 6. **One consistent pattern.** Taken together, Winter has fewer westward (Atlantic) exits and more eastward exits, both region-wide and from A and B. The seasonal differences are mostly smaller than the differences between starting cells.
 
@@ -56,6 +63,55 @@ Caveats:
 - A seasonal matrix applied for 91 days assumes the season's conditions hold for 13 weeks, so the 91-day numbers are indicative only.
 - These results show association, not cause.
 - When we compare with Russo et al. (2021), who report retroflection timing varying by season, we need to check their definitions first.
+
+## Checking the 56 / 91-day numbers against observed outcomes (`yoyo_seasonal_validation.py`)
+
+Lucy found that the all-year matrix gets B west right at 91 days but underestimates eastward exits, and suggested the same check for the seasonal numbers.
+
+**Method**
+- Same chaining as Lucy's notebook (Step 11): start from a pair in A, B or C, follow the drifter through its own 7-day pairs, and record the first exit. Starts with a missing week before the horizon are censored and left out.
+- Drifters: Zack's split. **Test drifters are not used**; everything here uses train + val (901 drifters).
+- Part 1 reproduces Lucy's all-year table exactly (matrix from train, observed on val): B west 20.0% vs 20.0%, B east 17.1% vs 4.4%, C east 61.9% vs 38.0% (`validation_lucy_check.csv`).
+- Part 2 gives the observed seasonal shares directly, with no matrix involved, plus paired season-vs-rest contrasts.
+- Part 3 compares each season's P⁸ / P¹³ (fit on the same train + val drifters) with the observed share, with a paired bootstrap CI of the gap. Since both sides use the same drifters, a gap means the memoryless (Markov) assumption fails, not overfitting.
+- A gap or contrast counts only if its CI excludes 0 **and** it is at least 1 pp. When no drifter in a group exits, the bootstrap CI collapses to [0, 0], so smaller gaps are not meaningful.
+
+**91 days, observed vs seasonal matrix** (%, 95% CI; n = drifters with an uncensored outcome)
+
+| Cell, side | Season | n | Observed | Matrix P¹³ | Observed − matrix |
+|---|---|---|---|---|---|
+| B west | Summer | 31 | 23.6 [10.9, 41.4] | 23.3 [14.0, 33.6] | +0.3 |
+| | Autumn | 33 | 13.0 [3.0, 27.7] | 21.6 [13.9, 30.6] | −8.6 [−20.7, 6.1] |
+| | **Winter** | 23 | **6.8** [0.0, 18.8] | **10.0** [5.7, 14.8] | −3.2 |
+| | Spring | 33 | 32.1 [14.6, 52.8] | 23.2 [15.3, 32.5] | +9.0 [−7.2, 26.8] |
+| C east | **Summer** | 22 | **38.0** [15.2, 59.4] | 34.5 [25.9, 45.3] | +3.5 |
+| | Autumn | 52 | 66.6 [50.4, 80.2] | 41.1 [33.1, 50.8] | **+25.5** [9.2, 38.6] |
+| | Winter | 40 | 52.8 [29.8, 74.9] | 45.4 [35.8, 55.5] | +7.4 |
+| | Spring | 30 | 69.1 [50.2, 87.3] | 34.7 [25.3, 44.9] | **+34.5** [16.9, 50.5] |
+| A east | Winter | 18 | 12.3 [0.0, 39.3] | 20.5 [14.7, 27.9] | −8.3 [−23.5, 19.3] |
+
+Full table, including 28 and 56 days and all sides: `seasonal_observed_exits.csv`.
+
+**Observed seasonal contrasts that exceed the uncertainty** (season − rest of year, `seasonal_observed_contrasts.csv`)
+
+| Cell | Days | Side | Season | Observed | Rest of year | Difference |
+|---|---|---|---|---|---|---|
+| B | 91 | west | Winter | 6.8% | 22.0% | −15.2 pp [−28.4, −0.1] |
+| C | 91 | east | Summer | 38.0% | 63.4% | −25.4 pp [−49.1, −1.1] |
+| A | 91 | west | Autumn | 0.6% | 6.4% | −5.9 pp [−13.3, −0.3] |
+| B | 56 | west | Autumn | 0.6% | 9.1% | −8.5 pp [−15.2, −2.5] |
+| B | 56 | west | Spring | 16.3% | 3.7% | +12.6 pp [+0.2, +27.8] |
+| C | 56 | east | Summer | 3.5% | 25.1% | −21.6 pp [−30.2, −11.5] |
+| A | 56 | east | Summer / Winter | 0.0% | about 3% | about −3 pp |
+
+**What this means**
+- **B west / Winter holds up.** The matrix fits B west in every season, and the observed Winter drop is the largest B effect. The observed CI only just excludes 0 (upper end −0.1 pp), so present it as "lower in Winter in both the matrix and the drifters", not as a precise size.
+- **C east: the matrix is too low in Autumn and Spring, not in Summer and Winter.** So the all-year underestimate Lucy found comes mainly from Autumn and Spring starts. The observed Summer drop at C (also at 56 days: 3.5% vs 25.1%) is a real seasonal signal that the matrix flattens out.
+- **A: most seasonal claims go.** A Winter east (+7.6 pp in the matrix) is not seen in the drifters. A west in Autumn is lower in the drifters, but the levels are small (0.6% vs 6.4%).
+- **Caveats.**
+  - Only 18–52 drifters per cell and season, so the observed CIs are wide.
+  - Censoring is uneven: in Winter, 41% of A starts and 49% of B starts lose their record before day 91, compared with 9–29% in other seasons. If drifters that die early behave differently, the Winter observed shares could be biased.
+  - These are in-sample for train + val; the test drifters are still locked for the final evaluation.
 
 ## 2° coverage / support map (`yoyo_coverage_map.py`)
 
@@ -82,7 +138,8 @@ Caveats:
 | File | Use |
 |---|---|
 | `fig_coverage_2deg.png` | 2° support map (feedback item: coverage map to match the 2° matrix) |
-| `fig_seasonal_exit_ABC.png` | Main seasonal figure: A/B/C at 28 and 91 days with CIs |
+| `fig_seasonal_observed_vs_matrix.png` | **Main seasonal figure now**: observed vs matrix at 91 days, per season, for A/B/C |
+| `fig_seasonal_exit_ABC.png` | Matrix-only A/B/C at 28 and 91 days with CIs (backup) |
 | `fig_seasonal_region_7day.png` | Region-wide 7-day seasonal exits |
 | `fig_seasonal_exit_maps.png` | Where west/east exits happen, by season (backup slide) |
 | `fig_threshold_ci_width.png` | Why 10 drifters is a minimum (Q&A backup) |
