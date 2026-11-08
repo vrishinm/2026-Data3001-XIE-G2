@@ -6,6 +6,7 @@ Status 9 Nov: seasonal results checked against observed 56 / 91-day outcomes (Lu
 1. **B west in Winter is the solid result.** Westward (Atlantic) exits from B by day 91 drop in Winter. This shows up in the matrix (11.3% vs about 19–23%) *and* directly in the drifters (6.8% vs 22.0% for the rest of the year, −15.2 pp [−28.4, −0.1]). The seasonal matrix matches the observed B west share in every season.
 2. **C east is underestimated by the matrix, and the observed data show a Summer effect the matrix misses.** Observed 91-day east exit from C is 38% in Summer vs 63% in the rest of the year (−25.4 pp [−49.1, −1.1]). The matrix gives 35–45% in every season, so it hides this. The gap is largest in Autumn and Spring (+25 and +35 pp).
 3. **Drop the "A turns east in Winter" claim.** It came from the matrix only. Observed A east in Winter is 12.3% [0.0, 39.3] from 18 drifters, so it is not supported.
+4. **Drogue status matters more than season at B and C** (first results, see the drogue section). Undrogued starts leave B west by day 91 about 2.5× as often as drogued ones (matrix 24.2% vs 10.1%; observed 25.4% vs 7.0%), and leave C east much more often (matrix 46.4% vs 24.3%). Matrix and observed outcomes agree on the direction.
 
 ## How to reproduce
 
@@ -15,6 +16,7 @@ Put `pairs7.csv` (DATA3001 handover folder) next to the scripts, or one folder u
 python yoyo_coverage_map.py
 python yoyo_seasonal_analysis.py
 python yoyo_seasonal_validation.py
+python yoyo_drogue_ABC.py
 ```
 
 Each takes 30–60 s and writes everything to `yoyo_outputs/`. `yoyo_seasonal_validation.py` also needs Zack's `drifter_split.csv` (in the repo). The only packages needed are numpy, pandas and matplotlib.
@@ -113,6 +115,57 @@ Full table, including 28 and 56 days and all sides: `seasonal_observed_exits.csv
   - Censoring is uneven: in Winter, 41% of A starts and 49% of B starts lose their record before day 91, compared with 9–29% in other seasons. If drifters that die early behave differently, the Winter observed shares could be biased.
   - These are in-sample for train + val; the test drifters are still locked for the final evaluation.
 
+## Drogued vs undrogued from A, B, C (`yoyo_drogue_ABC.py`, Stage 7 Task A, first results)
+
+**Builds on Vrishin's `vrishindrogue.py`.** His script compares 7-day exits per starting cell. It uses the same drogue rule as here, and the pair counts match his `drogue_exit_comparison.csv` exactly (the script asserts this). A, B and C never exit within 7 days, so this script adds the multi-step horizons for those cells.
+
+**Method**
+- **Drogue status of a pair** (Vrishin's rule):
+  - Drogued: the drogue is lost after the 7-day window.
+  - Undrogued: the drogue was lost on or before the start.
+  - Left out: 1,386 pairs that lose the drogue during the window and 175 with an unknown date.
+- **Matrix.** One P from drogued pairs and one from undrogued pairs, all drifters, as in the poster. West/east exits at 28, 56 and 91 days, whole-drifter bootstrap (1,000 resamples), and a paired CI of drogued − undrogued.
+- **Observed.** Lucy's chaining on train + val drifters, split by drogue status **at the start**. A drogued start may lose its drogue before day 91.
+
+**Support** (`fig_drogue_support.png`)
+- 154 cells have ≥10 drogued drifters; 164 have ≥10 undrogued drifters (171 overall).
+- 17 cells are supported overall but have <10 drogued drifters: the coasts, the NE corner, and one cell at 34–36°E 35–37°S.
+- 7 cells are supported overall but have <10 undrogued drifters.
+- A, B and C are all fine: drogued 39 / 59 / 57 drifters, undrogued 97 / 110 / 125.
+
+**91 days, drogued vs undrogued** (%, 95% CI; * = difference exceeds the uncertainty)
+
+| Cell, side | Matrix: drogued | Matrix: undrogued | Matrix difference | Observed: drogued (n) | Observed: undrogued (n) | Observed difference |
+|---|---|---|---|---|---|---|
+| A west | 1.2 [0.6, 2.0] | 4.1 [2.8, 5.6] | −2.9 [−4.7, −1.3] * | 3.7 (23) | 3.8 (61) | −0.1 |
+| A east | 10.8 [6.6, 16.3] | 14.6 [11.7, 17.8] | −3.8 [−9.0, 2.0] | 8.6 (23) | 13.2 (61) | −4.6 |
+| **B west** | 10.1 [6.6, 14.0] | 24.2 [18.9, 29.6] | **−14.1 [−20.7, −7.1] *** | 7.0 (31) | 25.4 (69) | **−18.4 [−30.7, −4.5] *** |
+| B east | 3.2 [1.8, 5.6] | 7.2 [5.4, 9.4] | −4.0 [−6.5, −1.0] * | 2.5 (31) | 13.2 (69) | −10.7 [−21.2, −2.0] * |
+| **C east** | 24.3 [17.0, 34.2] | 46.4 [41.8, 51.3] | **−22.2 [−31.7, −11.3] *** | 39.8 (33) | 65.9 (95) | −26.1 [−49.6, 1.4] |
+
+Full tables: `drogue_ABC_matrix.csv` and `drogue_ABC_observed.csv`.
+
+**What this means**
+- **Undrogued drifters leave R faster from B and C, in both directions.** This is consistent with undrogued drifters feeling more wind and surface (Stokes) drift.
+- The difference is as large as or larger than the seasonal effects. The B west difference holds in both the matrix and the observed outcomes. The C east difference is clear in the matrix; the observed CI only just includes 0.
+- **For the oil-spill example**, the undrogued results are probably the more relevant ones. The reviewing group pointed to Novelli et al. (2020) for this. Per the plan, we should read the paper before citing it.
+
+**Does drogue status explain the seasonal results?** The drogued share of A/B/C pairs differs by season:
+
+| | Summer | Autumn | Winter | Spring |
+|---|---|---|---|---|
+| A | 0.36 | 0.35 | 0.38 | 0.22 |
+| B | 0.26 | 0.55 | 0.33 | 0.18 |
+| C | 0.17 | 0.37 | 0.53 | 0.32 |
+
+- **B Winter** (drogued share 0.33) is close to Summer (0.26), so the Winter drop in B west is not explained by drogue status.
+- B Autumn (0.55 drogued, lower west) and B Spring (0.18 drogued, highest west) are partly confounded.
+- **C Summer** is mostly undrogued (0.17). Undrogued drifters exit east *more*, so drogue status would push C Summer east up, not down. The observed Summer drop at C is therefore not a drogue effect.
+
+**Still to do**
+- Agree with Vrishin who presents the drogue result (his 7-day cell comparison plus these A/B/C horizons).
+- Read Novelli et al. (2020).
+
 ## 2° coverage / support map (`yoyo_coverage_map.py`)
 
 - Here, support means distinct drifters with at least one **valid 7-day pair starting in the cell**. This replaces the poster's visitation count.
@@ -140,6 +193,8 @@ Full table, including 28 and 56 days and all sides: `seasonal_observed_exits.csv
 | `fig_coverage_2deg.png` | 2° support map (feedback item: coverage map to match the 2° matrix) |
 | `fig_seasonal_observed_vs_matrix.png` | **Main seasonal figure now**: observed vs matrix at 91 days, per season, for A/B/C |
 | `fig_seasonal_exit_ABC.png` | Matrix-only A/B/C at 28 and 91 days with CIs (backup) |
+| `fig_drogue_ABC.png` | Drogued vs undrogued at 91 days from A/B/C, matrix and observed |
+| `fig_drogue_support.png` | Drogued-only and undrogued-only support per 2° cell |
 | `fig_seasonal_region_7day.png` | Region-wide 7-day seasonal exits |
 | `fig_seasonal_exit_maps.png` | Where west/east exits happen, by season (backup slide) |
 | `fig_threshold_ci_width.png` | Why 10 drifters is a minimum (Q&A backup) |

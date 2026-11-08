@@ -25,9 +25,6 @@ Outputs (yoyo_outputs/):
   validation_lucy_check.csv          Part 1 table
   fig_seasonal_observed_vs_matrix.png
 """
-import os
-from pathlib import Path
-
 import matplotlib
 
 matplotlib.use("Agg")
@@ -35,11 +32,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from yoyo_common import CELLS_ABC, EXIT, HERE, N_CELLS, OUT, SEASON_MONTHS, SEASONS, ci, load_pairs7, \
-    load_shared_functions
+from yoyo_common import (CELLS_ABC, N_STATES, OUT, SEASONS, chain_outcomes, ci, exit_at, find_split, load_pairs7,
+                         load_shared_functions, to_P)
 
 N_BOOT = 1000
-N_STATES = N_CELLS + 4
 HORIZONS = {28: 4, 56: 8, 91: 13}
 CFGS = ["All year"] + SEASONS
 # 1 pp: when no drifter in a group exits, every bootstrap resample is also 0 and the CI collapses to
@@ -49,65 +45,12 @@ build_transition_matrix, _ = load_shared_functions()
 pd.set_option("display.width", 220)
 
 
-def find_split():
-    for p in [os.environ.get("DRIFTER_SPLIT"), HERE / "drifter_split.csv", HERE.parent / "drifter_split.csv"]:
-        if p and Path(p).exists():
-            return Path(p)
-    raise FileNotFoundError("drifter_split.csv (Zack's train/val/test split) not found")
-
-
 pairs = load_pairs7()
 split = pd.read_csv(find_split())
 pairs["split"] = pairs.traj.map(dict(zip(split.traj, split.split)))
 assert pairs.split.notna().all(), "every drifter in pairs7.csv should be in drifter_split.csv"
 print("drifters per split:", pairs.groupby("split").traj.nunique().to_dict())
 dev = pairs[pairs.split != "test"].reset_index(drop=True)   # train + val; test stays locked
-
-WEEK = np.int64(7 * 86_400 * 10**9)
-SIDE_OF = {v: k for k, v in EXIT.items()}
-
-
-def chain_outcomes(df, start_cells, weeks):
-    """Lucy's chain_outcomes for several start cells: outcome after `weeks` 7-day steps for every start."""
-    t_ns = pd.to_datetime(df.time, utc=True).values.astype("datetime64[ns]").astype(np.int64)
-    look = dict(zip(zip(df.traj.values, t_ns), df.dest.values))
-    sel = np.flatnonzero(df.origin_cell.isin(start_cells).values)
-    out = []
-    for i in sel:
-        tj, t, res = df.traj.values[i], t_ns[i], "inR"
-        for _ in range(weeks):
-            dst = look.get((tj, t))
-            if dst is None:
-                res = "censored"
-                break
-            if dst >= N_CELLS:
-                res = SIDE_OF[dst]
-                break
-            t += WEEK
-        out.append(res)
-    o = df.iloc[sel][["traj", "origin_cell", "season"]].copy()
-    o["out"] = out
-    return o
-
-
-def to_P(counts):
-    """Same rule as build_transition_matrix: row-normalise, unsupported rows stay zero, exits absorbing."""
-    rt = counts.sum(1)
-    P = np.divide(counts, rt[:, None], out=np.zeros_like(counts), where=rt[:, None] > 0)
-    P[N_CELLS:, N_CELLS:] = np.eye(4)
-    return P
-
-
-def exit_at(P, cell, steps):
-    v = np.zeros(N_STATES)
-    v[cell] = 1.0
-    out = {}
-    for k in range(1, max(steps) + 1):
-        v = v @ P
-        if k in steps:
-            out[k] = (v[EXIT["west"]], v[EXIT["east"]])
-    return out
-
 
 # ============================================================== Part 1: reproduce Lucy's all-year check
 train, val = pairs[pairs.split == "train"], pairs[pairs.split == "val"]

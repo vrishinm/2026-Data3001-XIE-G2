@@ -26,6 +26,7 @@ GRID = 2
 N_COLS = int(np.ceil((EAST - WEST) / GRID))    # 18
 N_ROWS = int(np.ceil((NORTH - SOUTH) / GRID))  # 13
 N_CELLS = N_COLS * N_ROWS                      # 234
+N_STATES = N_CELLS + 4                         # cells + 4 absorbing exits
 EXIT = {"west": 234, "east": 235, "south": 236, "north": 237}
 
 # Starting cells used throughout the poster (names = {99: "A", 58: "B", 44: "C"} in Lucy's notebook)
@@ -76,6 +77,13 @@ def load_pairs7():
     return pairs
 
 
+def find_split():
+    for p in [os.environ.get("DRIFTER_SPLIT"), HERE / "drifter_split.csv", HERE.parent / "drifter_split.csv"]:
+        if p and Path(p).exists():
+            return Path(p)
+    raise FileNotFoundError("drifter_split.csv (Zack's train/val/test split) not found")
+
+
 def load_shared_functions():
     """Return Vrishin's build_transition_matrix and bootstrap_exit_probability from vrishinanalysis.py."""
     src_path = HERE / "vrishinanalysis.py"
@@ -109,6 +117,56 @@ def drifter_bootstrap(df, group_col, event_cols, n_boot=1000, seed=42):
         with np.errstate(invalid="ignore", divide="ignore"):
             rates[e] = np.where(den > 0, (W @ num.to_numpy(float)) / den, np.nan)
     return groups, den, rates, W, n
+
+
+WEEK = np.int64(7 * 86_400 * 10**9)
+SIDE_OF = {v: k for k, v in EXIT.items()}
+
+
+def chain_outcomes(df, start_cells, weeks):
+    """Lucy's chain_outcomes (notebook Step 11) for several start cells.
+
+    Follows every start in `start_cells` week by week through its own 7-day pairs and returns the
+    starting rows with an extra column `out`: "west"/"east"/"south"/"north" (first exit), "inR", or
+    "censored" (record ends or has a gap before the horizon)."""
+    t_ns = pd.to_datetime(df.time, utc=True).values.astype("datetime64[ns]").astype(np.int64)
+    look = dict(zip(zip(df.traj.values, t_ns), df.dest.values))
+    sel = np.flatnonzero(df.origin_cell.isin(start_cells).values)
+    out = []
+    for i in sel:
+        tj, t, res = df.traj.values[i], t_ns[i], "inR"
+        for _ in range(weeks):
+            dst = look.get((tj, t))
+            if dst is None:
+                res = "censored"
+                break
+            if dst >= N_CELLS:
+                res = SIDE_OF[dst]
+                break
+            t += WEEK
+        out.append(res)
+    o = df.iloc[sel].copy()
+    o["out"] = out
+    return o
+
+
+def to_P(counts):
+    """Same rule as build_transition_matrix: row-normalise, unsupported rows stay zero, exits absorbing."""
+    rt = counts.sum(1)
+    P = np.divide(counts, rt[:, None], out=np.zeros_like(counts), where=rt[:, None] > 0)
+    P[N_CELLS:, N_CELLS:] = np.eye(4)
+    return P
+
+
+def exit_at(P, cell, steps):
+    v = np.zeros(N_STATES)
+    v[cell] = 1.0
+    out = {}
+    for k in range(1, max(steps) + 1):
+        v = v @ P
+        if k in steps:
+            out[k] = (v[EXIT["west"]], v[EXIT["east"]])
+    return out
 
 
 def ci(samples, axis=0):
