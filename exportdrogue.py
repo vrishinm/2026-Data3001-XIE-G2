@@ -78,3 +78,28 @@ print("\nOBSERVATION TIMESTAMP VERIFICATION")
 print("Pairs checked:", len(sample))
 print("Matching timestamps:", matches.sum())
 print("All timestamps match:", matches.all())
+
+# ==================================================
+# VERIFY ALL TRAJECTORY IDS
+# ==================================================
+
+rowsize = ds["rowsize"].values
+trajectory_ends = np.cumsum(rowsize)
+
+pairs_check = pd.read_csv("pairs7.csv")
+
+calculated_traj = np.searchsorted(
+    trajectory_ends,
+    pairs_check["obs_row"].to_numpy(dtype=int),
+    side="right"
+)
+
+matches = (
+    calculated_traj
+    == pairs_check["traj"].to_numpy(dtype=int)
+)
+
+print("\nTRAJECTORY ID VERIFICATION")
+print("Pairs checked:", len(matches))
+print("Matching trajectory IDs:", matches.sum())
+print("All trajectory IDs match:", matches.all())
