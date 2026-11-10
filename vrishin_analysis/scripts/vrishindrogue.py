@@ -107,7 +107,7 @@ for name, code in [
 print("\nDROGUE EXIT COMPARISON")
 print(summary.to_string(float_format=lambda x: f"{x:.4f}"))
 
-summary.to_csv("drogue_exit_comparison.csv")
+summary.to_csv("vrishin_analysis/results/drogue_exit_comparison.csv")
 print("\nSaved: drogue_exit_comparison.csv")
 
 
@@ -156,7 +156,7 @@ print(both["west_difference"].describe())
 print("\nEASTWARD EXIT DIFFERENCES")
 print(both["east_difference"].describe())
 
-both.to_csv("drogue_cell_comparison.csv")
+both.to_csv("vrishin_analysis/results/drogue_cell_comparison.csv")
 print("\nSaved: drogue_cell_comparison.csv")
 
 
@@ -453,7 +453,7 @@ pd.DataFrame(
         "east_difference"
     ]
 ).to_csv(
-    "drogue_bootstrap_results.csv",
+    "vrishin_analysis/results/drogue_bootstrap_results.csv",
     index=False
 )
 
@@ -515,7 +515,7 @@ ax.grid(axis="x", alpha=0.2)
 plt.tight_layout()
 
 plt.savefig(
-    "drogue_exit_confidence_intervals.png",
+    "vrishin_analysis/figures/drogue_exit_confidence_intervals.png",
     dpi=300,
     bbox_inches="tight"
 )

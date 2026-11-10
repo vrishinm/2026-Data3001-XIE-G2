@@ -98,7 +98,7 @@ print(
     "m/s"
 )
 
-speed_summary.to_csv("drogue_speed_comparison.csv")
+speed_summary.to_csv("vrishin_analysis/results/drogue_speed_comparison.csv")
 print("\nSaved: drogue_speed_comparison.csv")
 
 
@@ -182,7 +182,7 @@ print(
     "cm/s"
 )
 
-both_speed.to_csv("drogue_speed_by_cell.csv")
+both_speed.to_csv("vrishin_analysis/results/drogue_speed_by_cell.csv")
 print("\nSaved: drogue_speed_by_cell.csv")
 
 
@@ -325,7 +325,7 @@ print(
 pd.DataFrame({
     "speed_difference_ms": bootstrap_differences
 }).to_csv(
-    "drogue_speed_bootstrap.csv",
+    "vrishin_analysis/results/drogue_speed_bootstrap.csv",
     index=False
 )
 
@@ -381,7 +381,7 @@ ax.legend(loc="upper right")
 
 plt.tight_layout()
 plt.savefig(
-    "drogue_speed_confidence_intervals.png",
+    "vrishin_analysis/figures/drogue_speed_confidence_intervals.png",
     dpi=300,
     bbox_inches="tight"
 )
