@@ -1,0 +1,2 @@
+cells_total,cells_with_valid_pairs,cells_ge10_drifters,cells_ge25_drifters,cells_ge50_drifters,median_drifters_per_cell,p25_drifters_per_cell,share_of_pairs_in_ge10_cells
+234,177,171,158,148,107.0,70.0,0.999065778291023

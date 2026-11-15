@@ -1,0 +1,17 @@
+origin_cell,season,n_pairs,n_drifters,cell,enough_support
+44,Summer,242,34,C,True
+44,Autumn,541,72,C,True
+44,Winter,398,54,C,True
+44,Spring,287,44,C,True
+58,Summer,184,47,B,True
+58,Autumn,247,54,B,True
+58,Winter,200,49,B,True
+58,Spring,184,54,B,True
+99,Summer,281,39,A,True
+99,Autumn,327,47,A,True
+99,Winter,226,36,A,True
+99,Spring,247,40,A,True
+-1,Summer,34335,658,Region,True
+-1,Autumn,40735,683,Region,True
+-1,Winter,42098,723,Region,True
+-1,Spring,36971,701,Region,True
