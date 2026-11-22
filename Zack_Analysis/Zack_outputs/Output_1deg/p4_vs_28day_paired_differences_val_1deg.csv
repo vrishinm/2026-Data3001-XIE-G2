@@ -1,0 +1,3 @@
+baseline,Brier: baseline - P,95% CI,Brier 5 outcomes: baseline - P,95% CI ,top-3: P - baseline,95% CI  
+Persistence (stay in start cell),1.1091442235327988,"[1.088, 1.135]",0.2697149397163793,"[0.231, 0.317]",0.2644865567489909,"[0.239, 0.295]"
+Overall frequency (28-day outcomes),0.11767012129402477,"[0.103, 0.136]",0.19024649112742753,"[0.166, 0.220]",0.051583772319901466,"[0.042, 0.061]"
