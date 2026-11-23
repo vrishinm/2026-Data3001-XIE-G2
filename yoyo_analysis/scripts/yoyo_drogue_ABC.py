@@ -12,7 +12,7 @@ Drogue status of a 7-day pair (Vrishin's rule, drogue_info.csv):
 Part 1  Support: distinct drifters per 2-degree cell for drogued-only and undrogued-only pairs;
         which cells fall below 10 drifters (plan: "report which cells fall below the support threshold").
 Part 2  Matrix: P from drogued-only pairs vs P from undrogued-only pairs (Vrishin's
-        build_transition_matrix, all drifters as in the poster), west / east exit from A, B, C at
+        build_transition_matrix, train + val drifters only), west / east exit from A, B, C at
         28 / 56 / 91 days, whole-drifter bootstrap CIs and a paired CI of drogued - undrogued.
 Part 3  Observed: Lucy's week-by-week chaining (train + val drifters, test locked), split by the
         drogue status at the START. A drogued start can lose its drogue before day 91, so this is
@@ -32,7 +32,7 @@ from matplotlib.colors import BoundaryNorm, ListedColormap
 from matplotlib.patches import Rectangle
 
 from yoyo_common import (FIG, find_vrishin, CELLS_ABC, LAT_EDGES, LON_EDGES, MIN_DRIFTERS, N_CELLS, N_STATES, OUT, cell_bounds,
-                         chain_outcomes, ci, draw_land, exit_at, find_split, load_pairs7, load_shared_functions,
+                         chain_outcomes, ci, draw_land, drop_test, exit_at, load_pairs7, load_shared_functions,
                          mark_abc, style_map, to_grid, to_P)
 
 N_BOOT = 1000
@@ -70,14 +70,17 @@ print("  A/B/C:", sup.loc[list(CELLS_ABC.values()), GROUPS].rename(index={v: k f
       .to_dict("index"))
 
 # ============================================================== Part 2: matrix, drogued vs undrogued
+# Parts 2 and 3 use training + validation drifters only (test drifters stay locked).
+# Part 1 and the pair-count check above use every drifter, as Vrishin's 7-day comparison does.
+dev = drop_test(pairs)
 steps = list(HORIZONS.values())
-sub = {g: pairs[pairs.drogue == g] for g in GROUPS}
+sub = {g: dev[dev.drogue == g] for g in GROUPS}
 P_shared = {g: build_transition_matrix(sub[g])[0] for g in GROUPS}
 
-traj_codes, traj_idx = np.unique(pairs.traj.to_numpy(), return_inverse=True)
+traj_codes, traj_idx = np.unique(dev.traj.to_numpy(), return_inverse=True)
 D = len(traj_codes)
-codes = pairs.origin_cell.to_numpy() * N_STATES + pairs.dest.to_numpy()
-masks = {g: (pairs.drogue == g).to_numpy() for g in GROUPS}
+codes = dev.origin_cell.to_numpy() * N_STATES + dev.dest.to_numpy()
+masks = {g: (dev.drogue == g).to_numpy() for g in GROUPS}
 
 
 def P_for(weights, g):
@@ -131,8 +134,6 @@ print(pd.DataFrame({"cell": t.cell, "days": t.days, "side": t.side,
                                             for r in t.itertuples()]}).to_string(index=False))
 
 # ============================================================== Part 3: observed, by status at the start
-split = pd.read_csv(find_split())
-dev = pairs[pairs.traj.map(dict(zip(split.traj, split.split))) != "test"].reset_index(drop=True)
 d_codes, d_idx = np.unique(dev.traj.to_numpy(), return_inverse=True)
 Dd = len(d_codes)
 pos_of = pd.Series(np.arange(Dd), index=d_codes)
@@ -224,7 +225,7 @@ for ax, side in zip(axes, ["west", "east"]):
 axes[0].set_ylabel("% of starts")
 axes[1].legend(frameon=False, fontsize=8)
 fig.suptitle("Drogued vs undrogued starts from A, B, C at 91 days (95% whole-drifter bootstrap CIs)\n"
-             "open = matrix from that group's pairs (all drifters); filled = observed outcome (train + val drifters)",
+             "open = matrix from that group's pairs; filled = observed outcome (both train + val drifters)",
              fontsize=11)
 fig.tight_layout()
 fig.savefig(FIG / "fig_drogue_ABC.png", dpi=180)

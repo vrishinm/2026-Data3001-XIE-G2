@@ -2,13 +2,16 @@
 
 Each 7-day pair from Lucy's pairs7.csv gets the austral season of its START date
 (Summer Dec-Feb, Autumn Mar-May, Winter Jun-Aug, Spring Sep-Nov).
+Only training and validation drifters are used (901 drifters); the 225 test drifters stay locked.
+An earlier version fitted these matrices on all 1,126 drifters, including the test set.
 
 Part 1  Seasonal 7-day transition matrices built with Vrishin's build_transition_matrix.
 Part 2  Region-wide 7-day west / east first-exit probability per season, 95% CI from Vrishin's
         whole-drifter bootstrap_exit_probability (all starting cells pooled).
 Part 3  Starting cells A, B, C. They sit well inside R, so NO drifter leaves R within 7 days from
         them; the poster's A/B/C numbers are multi-step (P^n). Here: west / east exit probability at
-        28 days (P^4) and 91 days (P^13, unvalidated projection) from each season's matrix, with
+        28 days (P^4) and 91 days (P^13, checked against observed paths in yoyo_seasonal_validation.py)
+        from each season's matrix, with
         whole-drifter bootstrap CIs (the same resampled drifters for every season, so
         "season minus rest of year" differences get a valid paired CI).
 Part 4  Per-cell seasonal 7-day exit probabilities (maps), cells with >= 10 distinct drifters only.
@@ -23,7 +26,7 @@ import numpy as np
 import pandas as pd
 
 from yoyo_common import (FIG, CELLS_ABC, EXIT, LAT_EDGES, LON_EDGES, MIN_DRIFTERS, N_CELLS, OUT, SEASON_MONTHS, SEASONS,
-                         ci, draw_land, drifter_bootstrap, load_pairs7, load_shared_functions, mark_abc, style_map,
+                         ci, draw_land, drifter_bootstrap, drop_test, load_pairs7, load_shared_functions, mark_abc, style_map,
                          to_grid)
 
 N_BOOT = 1000
@@ -31,7 +34,7 @@ N_STATES = N_CELLS + 4
 HORIZONS = {7: 1, 28: 4, 91: 13}       # days -> number of 7-day steps
 MIN_EFFECT = 0.001  # 0.1 pp: smaller "significant" differences are numerical zeros (no exits at all)
 build_transition_matrix, bootstrap_exit_probability = load_shared_functions()
-pairs = load_pairs7()
+pairs = drop_test(load_pairs7())
 pd.set_option("display.width", 220)
 
 
@@ -190,8 +193,8 @@ support["enough_support"] = support.n_drifters >= MIN_DRIFTERS
 support.to_csv(OUT / "seasonal_support.csv", index=False)
 
 poster = abc[(abc.season == "All year") & (abc.horizon_days == 91)].set_index("cell")
-print(f"\nPoster check (all-year, 91 days): B west {poster.loc['B', 'p_west']:.1%} (poster 17.8%), "
-      f"C east {poster.loc['C', 'p_east']:.1%} (poster 38.7%)")
+print(f"\nAll-year, 91 days (train + val): B west {poster.loc['B', 'p_west']:.1%}, C east {poster.loc['C', 'p_east']:.1%} "
+      "(the poster's 17.8% and 38.7% used all drifters, including test)")
 print("\nA/B/C west / east exit probability by season (95% whole-drifter bootstrap CI):")
 show = abc.assign(west=[fmt(r.p_west, r.p_west_lo, r.p_west_hi) for r in abc.itertuples()],
                   east=[fmt(r.p_east, r.p_east_lo, r.p_east_hi) for r in abc.itertuples()],
@@ -235,11 +238,11 @@ for r, days in enumerate([28, 91]):
     for c, (side, label) in enumerate([("west", "West exit (Atlantic)"), ("east", "East exit (Indian Ocean)")]):
         ax = axes[r, c]
         bars(ax, abc[abc.horizon_days == days], names, "cell", side, f"P(first exit {side}) (%)")
-        tag = "" if days <= 28 else "  - projection, not yet validated"
+        tag = "" if days <= 28 else "  - matrix projection"
         ax.set_title(f"{label} within {days} days{tag}", fontsize=11)
 axes[0, 0].legend(frameon=False, fontsize=9, title="Season of start date", title_fontsize=9)
 fig.suptitle("Starting cells A, B, C: exit probability by season, from each season's 7-day matrix "
-             "(P⁴ = 28 d, P¹³ = 91 d)\nbars = estimate, whiskers = 95% whole-drifter bootstrap CI", fontsize=12)
+             "(P⁴ = 28 d, P¹³ = 91 d; train + val drifters)\nbars = estimate, whiskers = 95% whole-drifter bootstrap CI", fontsize=12)
 fig.tight_layout()
 fig.savefig(FIG / "fig_seasonal_exit_ABC.png", dpi=200)
 plt.close(fig)

@@ -87,14 +87,25 @@ def find_split():
     raise FileNotFoundError("drifter_split.csv (Zack's train/val/test split) not found")
 
 
+def drop_test(pairs):
+    """Keep training and validation drifters only. The 225 test drifters in drifter_split.csv stay locked
+    for Zack's final scores, so no matrix or observed estimate in yoyo_analysis uses them."""
+    split = pd.read_csv(find_split())
+    label = pairs.traj.map(dict(zip(split.traj, split.split)))
+    assert label.notna().all(), "some drifters in pairs7.csv are missing from drifter_split.csv"
+    kept = pairs[label != "test"].reset_index(drop=True)
+    print(f"Train + val only: {len(kept):,} pairs, {kept.traj.nunique():,} drifters (test drifters left out)")
+    return kept
+
+
 def find_vrishin(name):
     """Locate one of Vrishin's files: his vrishin_analysis/ folder, the repo root, or $VRISHIN_DIR."""
     dirs = [os.environ.get("VRISHIN_DIR"), REPO / "vrishin_analysis" / "scripts", REPO / "vrishin_analysis" / "results", REPO]
     for d in dirs:
         if d and (Path(d) / name).exists():
             return Path(d) / name
-    raise FileNotFoundError(f"{name} not found: it is in Vrishin's vrishin_analysis/ folder (branch vrishin); "
-                            "merge that branch or set VRISHIN_DIR to a folder that contains it")
+    raise FileNotFoundError(f"{name} not found: it should be in vrishin_analysis/scripts or vrishin_analysis/results; "
+                            "or set VRISHIN_DIR to a folder that contains it")
 
 
 def load_shared_functions():
