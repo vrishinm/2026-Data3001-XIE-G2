@@ -213,3 +213,86 @@ We use GitHub to manage code and documentation, with Google Colab and VS Code su
 - McAdam, R., & van Sebille, E. (2018). Surface connectivity and interocean exchanges from drifter-based transition matrices. *Journal of Geophysical Research: Oceans, 123*(1), 514–532. https://doi.org/10.1002/2017JC013363
 - Miron, P., Beron-Vera, F. J., Olascoaga, M. J., Sheinbaum, J., Pérez-Brunius, P., & Froyland, G. (2017). Lagrangian dynamical geography of the Gulf of Mexico. *Scientific Reports, 7*, Article 7021. https://doi.org/10.1038/s41598-017-07177-w
 - Russo, C. S., Lamont, T., & Krug, M. (2021). Spatial and temporal variability of the Agulhas Retroflection: Observations from a new objective detection method. *Remote Sensing of Environment, 253*, Article 112239. https://doi.org/10.1016/j.rse.2020.112239
+
+---
+
+# Final Project — Reproducibility Guide
+
+## Environment
+
+The analysis was reproduced using Python 3.13 and the dependencies in `requirements.txt`.
+
+From the repository root, create a virtual environment and install the dependencies:
+
+```bash
+python3.13 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+```
+
+If `python3.13` is unavailable, install Python 3.13 first.
+
+The workflows access the public NOAA Global Drifter Program hourly dataset through CloudDrift. Internet access is required, and processing the source data requires substantial memory.
+
+## Reproducing the validation analysis
+
+Run these commands in order from the repository root:
+
+```bash
+python generate_pairs.py
+python prepare_inputs.py
+python run_validation.py
+```
+
+### 1. Generate seven-day transitions
+
+`generate_pairs.py` executes the verified pair-generation cells from `Lucy_temperature_and_handover.ipynb`.
+
+It generates `pairs7.csv` from the NOAA dataset and checks that the output contains 154,139 seven-day transitions.
+
+If an existing root-level `pairs7.csv` is present, the script verifies that the regenerated table matches it exactly.
+
+### 2. Prepare the frozen drifter split
+
+`prepare_inputs.py` reads the repository's `drifter_split.csv`, which is the authoritative train/validation/test allocation.
+
+It reconstructs:
+
+- `gdp_out/drifter_ids.csv`
+- `gdp_out/drifter_split.csv`
+
+The original split is not regenerated or randomised. If `pairs7.csv` exists, the script also verifies its per-drifter pair counts against the frozen split.
+
+### 3. Reproduce validation results
+
+`run_validation.py` executes the validation analysis from `Validation_code.ipynb`, excluding Colab-specific setup and the final test-set cell.
+
+The runner keeps `TEST_UNLOCKED = False`.
+
+It saves its results in a temporary directory and prints the output path. The repository's committed results are not overwritten.
+
+The validation run generates 10 CSV files, including `validation_val.csv`, `multiweek_scores_val.csv`, and `p4_vs_28day_scores_val.csv`.
+
+## Expected validation results
+
+| Metric | Expected value |
+|---|---:|
+| Seven-day pairs | 154,139 |
+| Contributing drifters | 1,126 |
+| Training drifters | 676 |
+| Validation drifters | 225 |
+| Test drifters | 225 |
+| Seven-day validation Brier score | 0.809 |
+| Seven-day validation top-3 hit rate | 0.632 |
+| Twenty-eight-day validation Brier score | 0.841 |
+
+The pair-generation and validation workflows have been executed locally. The regenerated pair table matched the existing table exactly, and all 10 regenerated validation CSV files matched their repository counterparts within numerical comparison tolerances.
+
+The final test-set evaluation is deliberately excluded from the automated validation runner. The final test score is therefore not independently verified by these three commands.
+
+## Additional analyses
+
+The repository also contains individual analysis scripts in `vrishin_analysis/` and `yoyo_analysis/`, along with additional notebooks and saved results. These are not executed by the three-command validation workflow.
+
+The generated `pairs7.csv`, `pairs7_drogue.csv`, and `gdp_out/` files are excluded from version control because they are intermediate data products.
+

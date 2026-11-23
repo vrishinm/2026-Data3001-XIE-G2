@@ -216,3 +216,10 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# DATA3001 local reproducibility files
+.vscode/
+gdp_out/
+pairs7.csv
+pairs7_drogue.csv
+.venv/
