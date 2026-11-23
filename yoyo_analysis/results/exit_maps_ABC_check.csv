@@ -1,0 +1,13 @@
+days,cell,side,matrix_pct
+91,A,west,3.2
+91,B,west,20.0
+91,C,west,0.1
+91,A,east,11.6
+91,B,east,4.4
+91,C,east,38.0
+28,A,west,0.0
+28,B,west,0.8
+28,C,west,0.0
+28,A,east,0.0
+28,B,east,0.0
+28,C,east,0.2
