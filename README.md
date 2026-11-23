@@ -155,4 +155,8 @@ Files under `gdp_out/` are written when the notebooks run and are not committed;
 
 ## 1° outputs
 
-`Zack_Analysis/Zack_outputs/Output_1deg/` holds an exploratory rerun of the validation on 1° cells (`pairs7_1deg.csv` and `*_1deg.csv`). It is not used in the report, where the comparison of cell sizes is listed as future work (Section 7). The committed notebook is set to `GRID = 2`.
+`Zack_Analysis/Zack_outputs/Output_1deg/` holds an exploratory rerun of the validation on 1° cells. It is not used in the report, where the comparison of cell sizes is listed as future work (Section 7).
+
+- **`pairs7_1deg.csv`** is `pairs7.csv` with the cells recomputed on a 1° grid: 35 × 25 = 875 cells, with the exits numbered 875–878 (west, east, south, north). The pairs, drifters, start times, `obs_row` values and exits are the same as at 2°. It is what the pair step (`Lucy_temperature_and_handover.ipynb`, Section 6) gives with a 1° grid: recomputing each pair's start cell and day-7 cell from the GDP positions on a 1° grid reproduces every row.
+- **The `*_1deg.csv` tables** come from `Zack_Analysis/Validation_code.ipynb`, Sections 1–5, with `GRID = 1` and `PAIRS_PATH` set to `pairs7_1deg.csv`. The drifter split, seed and bootstrap settings are the same as at 2°. The committed notebook is set to `GRID = 2`.
+- **Check (23 November 2026).** Rerunning the notebook this way reproduces all nine committed 1° tables, with differences no larger than 3 × 10⁻¹⁶; the same rerun at 2° reproduces the ten 2° tables in `Zack_Analysis/Zack_outputs/`. The notebook also writes `p4_vs_28day_shares_val.csv`, but its 1° version was not uploaded.
