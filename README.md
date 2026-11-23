@@ -265,7 +265,7 @@ The original split is not regenerated or randomised. If `pairs7.csv` exists, the
 
 ### 3. Reproduce validation results
 
-`run_validation.py` executes the validation analysis from `Validation_code.ipynb`, excluding Colab-specific setup and the final test-set cell.
+`run_validation.py` executes the validation analysis from `Zack_Analysis/Validation_code.ipynb`, excluding Colab-specific setup and the final test-set cell.
 
 The runner keeps `TEST_UNLOCKED = False`.
 

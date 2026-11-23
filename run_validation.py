@@ -6,7 +6,7 @@ from nbclient import NotebookClient
 ROOT = Path(__file__).resolve().parent
 
 required = [
-    ROOT / "Validation_code.ipynb",
+    ROOT / "Zack_Analysis" / "Validation_code.ipynb",
     ROOT / "pairs7.csv",
     ROOT / "gdp_out/drifter_ids.csv",
     ROOT / "gdp_out/drifter_split.csv",
@@ -25,7 +25,7 @@ output = audit / "outputs"
 output.mkdir()
 
 nb = nbformat.read(
-    ROOT / "Validation_code.ipynb",
+    ROOT / "Zack_Analysis" / "Validation_code.ipynb",
     as_version=4
 )
 
